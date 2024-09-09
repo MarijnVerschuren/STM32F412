@@ -55,9 +55,9 @@ link_directories(
 
 # list of modules to build final firmware
 add_executable(${PROJECT_NAME}
-        src/vector.s
-        src/startup.s
-        src/sys.s
+        src/vector.S
+        src/startup.S
+        src/sys.S
         src/main.c
 )
 
