@@ -1,13 +1,18 @@
 #include "types.h"
 #include "periph.h"
+#include "sys.h"
 
-extern volatile uint32_t tick;
 
 #define PIN 8
 
 // application
 void main(void) {
-	(void)tick;
+	set_SYS_hardware_config(PWR_LVL_NOM, 25000000);						// 3v3, HSE@25MHz
+	set_SYS_oscilator_config(0, 1, 0, 0, 1, 0, 0, 0, 0);				// enable HSE and CSS
+	set_SYS_PLL_config(PLL_CLK_SRC_HSE, 12U, 96U, PLL_P_DIV_2, 0, 0);	// enable PLL @ 25MHz / 12 * 96 / 2 -> 100MHz
+	set_SYS_clock_config(SYS_CLK_SRC_PLL_P, AHB_CLK_NO_DIV, APBx_CLK_DIV2, APBx_CLK_NO_DIV, 0);
+
+	sys_init();
 
 	RCC->AHB1ENR |= (0x1 << 2) | 0x1;
 	GPIOA->MODER |= 0x1 << (2*PIN);

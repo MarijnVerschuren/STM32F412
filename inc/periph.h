@@ -12,6 +12,7 @@
 #define SCB						((SCB_type*)SCB_BASE)
 
 /*!< APB1 peripherals */
+#define PWR						((PWR_t*)PWR_BASE)
 
 /*!< APB2 peripherals */
 
@@ -27,7 +28,7 @@
 
 
 /*!<
- * peripheral types
+ * core peripheral types
  * */
 typedef struct {  // TODO:
 	_I  uint32_t	CPUID;			/* CPUID base                        0x00 */
@@ -52,6 +53,15 @@ typedef struct {  // TODO:
 	uint32_t		RESERVED0[5U];	/*                              0x74-0x84 */
 	_IO uint32_t	CPACR;			/* coprocessor access control        0x88 */
 } SCB_type;
+
+
+/*!<
+ * peripheral types
+ * */
+typedef struct {
+	_IO uint32_t CR;   /* power control                                  0x00 */
+	_IO uint32_t CSR;  /* power control and status                       0x04 */
+} PWR_type;
 
 typedef struct {
 	_IO uint32_t	CR;				/* clock control                     0x00 */

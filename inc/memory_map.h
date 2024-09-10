@@ -33,9 +33,35 @@
 #define AHB2PERIPH_BASE		(PERIPH_BASE + 0x10000000UL)
 
 
+
 /*!<
  * APB1 peripheral map
  * */
+#define TIM2_BASE             (APB1PERIPH_BASE + 0x0000UL)
+#define TIM3_BASE             (APB1PERIPH_BASE + 0x0400UL)
+#define TIM4_BASE             (APB1PERIPH_BASE + 0x0800UL)
+#define TIM5_BASE             (APB1PERIPH_BASE + 0x0C00UL)
+#define TIM6_BASE             (APB1PERIPH_BASE + 0x1000UL)
+#define TIM7_BASE             (APB1PERIPH_BASE + 0x1400UL)
+#define TIM12_BASE            (APB1PERIPH_BASE + 0x1800UL)
+#define TIM13_BASE            (APB1PERIPH_BASE + 0x1C00UL)
+#define TIM14_BASE            (APB1PERIPH_BASE + 0x2000UL)
+#define RTC_BASE              (APB1PERIPH_BASE + 0x2800UL)
+#define WWDG_BASE             (APB1PERIPH_BASE + 0x2C00UL)
+#define IWDG_BASE             (APB1PERIPH_BASE + 0x3000UL)
+#define I2S2ext_BASE          (APB1PERIPH_BASE + 0x3400UL)
+#define SPI2_BASE             (APB1PERIPH_BASE + 0x3800UL)
+#define SPI3_BASE             (APB1PERIPH_BASE + 0x3C00UL)
+#define I2S3ext_BASE          (APB1PERIPH_BASE + 0x4000UL)
+#define USART2_BASE           (APB1PERIPH_BASE + 0x4400UL)
+#define USART3_BASE           (APB1PERIPH_BASE + 0x4800UL)
+#define I2C1_BASE             (APB1PERIPH_BASE + 0x5400UL)
+#define I2C2_BASE             (APB1PERIPH_BASE + 0x5800UL)
+#define I2C3_BASE             (APB1PERIPH_BASE + 0x5C00UL)
+#define FMPI2C1_BASE          (APB1PERIPH_BASE + 0x6000UL)
+#define CAN1_BASE             (APB1PERIPH_BASE + 0x6400UL)
+#define CAN2_BASE             (APB1PERIPH_BASE + 0x6800UL)
+#define PWR_BASE              (APB1PERIPH_BASE + 0x7000UL)
 
 
 /*!<
@@ -78,8 +104,9 @@
  * */
 
 
+
 /*!<
- * peripheral register maps
+ * core peripheral register maps
  * */
 /*!< SCB */
 #define SCB_CPUID		0x00
@@ -102,6 +129,14 @@
 #define SCB_MMFR		0x50
 #define SCB_ISAR		0x60
 #define SCB_CPACR		0x88
+
+
+/*!<
+ * peripheral register maps
+ * */
+/*!< PWR */
+#define PWR_CR			0x00
+#define PWR_CSR			0x04
 
 /*!< RCC */
 #define RCC_CR			0x00

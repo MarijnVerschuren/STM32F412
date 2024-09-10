@@ -59,6 +59,7 @@ add_executable(${PROJECT_NAME}
         src/startup.S
         src/sys.S
         src/main.c
+        src/sys.c
 )
 
 target_link_libraries(${PROJECT_NAME}
