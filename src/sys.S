@@ -26,7 +26,6 @@ sys_config:
 .word 0x00000000
 .word 0x00000000
 .word 0x00000000
-.word 0x00000000
 .size sys_config, .-sys_config
 
 

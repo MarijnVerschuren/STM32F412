@@ -9,7 +9,8 @@
 
 
 /*!< core peripherals */
-#define SCB						((SCB_type*)SCB_BASE)
+#define SCB						((SCB_t*)SCB_BASE)
+#define SYS_TICK				((SYS_TICK_t*)SYS_TICK_BASE)
 
 /*!< APB1 peripherals */
 #define PWR						((PWR_t*)PWR_BASE)
@@ -52,7 +53,14 @@ typedef struct {  // TODO:
 	_I  uint32_t	ISAR[5U];		/* instruction set attributes   0x60-0x70 */
 	uint32_t		RESERVED0[5U];	/*                              0x74-0x84 */
 	_IO uint32_t	CPACR;			/* coprocessor access control        0x88 */
-} SCB_type;
+} SCB_t;
+
+typedef struct {
+	_IO uint32_t CTRL;				/* control and status                0x00 */
+	_IO uint32_t LOAD;				/* reload value                      0x04 */
+	_IO uint32_t VAL;				/* current value                     0x08 */
+	_I  uint32_t CALIB;				/* calibration                       0x0C */
+} SYS_TICK_t;
 
 
 /*!<
@@ -61,7 +69,7 @@ typedef struct {  // TODO:
 typedef struct {
 	_IO uint32_t CR;   /* power control                                  0x00 */
 	_IO uint32_t CSR;  /* power control and status                       0x04 */
-} PWR_type;
+} PWR_t;
 
 typedef struct {
 	_IO uint32_t	CR;				/* clock control                     0x00 */
