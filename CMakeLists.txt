@@ -13,10 +13,8 @@ set(LINKER_SCRIPT "lnk/STM32F412.ld")
 set(CPU_OPTIONS -mthumb -mcpu=cortex-m4)
 
 # optimizations (-O0 -O1 -O2 -O3 -Os -Ofast -Og -flto)
-set(CMAKE_C_FLAGS_DEBUG "-Og -g -DDEBUG")
-set(CMAKE_CXX_FLAGS_DEBUG "-Og -g")
-set(CMAKE_C_FLAGS_RELEASE "-Os -flto")
-set(CMAKE_CXX_FLAGS_RELEASE "-Os -flto")
+set(CMAKE_C_FLAGS_DEBUG "-O0 -g -DDEBUG")
+set(CMAKE_C_FLAGS_RELEASE "-Ofast -flto")
 
 add_compile_options(
         ${CPU_OPTIONS}
@@ -60,6 +58,7 @@ add_executable(${PROJECT_NAME}
         src/sys.S
         src/main.c
         src/sys.c
+        src/gpio.S
 )
 
 target_link_libraries(${PROJECT_NAME}

@@ -122,7 +122,8 @@ void set_SYS_tick_config(uint8_t interrupt_enable) {
 }
 
 void sys_init(void) {
-	// TODO: currently assuming sys_reset!
+	// TODO: make it possible to switch sys clock multiple times
+	// NOTE: currently assuming sys_reset state
 	// set clock variables
 	HSE_clock_frequency = sys_config.HSE_frequency;
 	if (sys_config.PLL_enable) {

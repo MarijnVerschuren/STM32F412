@@ -65,13 +65,39 @@ typedef enum {
 
 
 /*!<
- * variables
+ * constants
  * */
+extern const uint32_t HSI_clock_frequency;
+extern const uint32_t LSE_clock_frequency;
+extern const uint32_t LSI_clock_frequency;
+
+
+/*!<
+ * clock variables
+ * */
+extern uint32_t HSE_clock_frequency;
+extern uint32_t PLL_P_clock_frequency;
+extern uint32_t PLL_Q_clock_frequency;
+extern uint32_t PLL_R_clock_frequency;
+extern uint32_t RTC_clock_frequency;
+extern uint32_t SYS_clock_frequency;
+extern uint32_t AHB_clock_frequency;
+extern uint32_t APB1_clock_frequency;
+extern uint32_t APB2_clock_frequency;
+
 volatile extern uint64_t tick;
 
 
 /*!<
  * functions
+ * */
+extern void sys_reset(void);
+void sys_init(void);
+extern void delay_ms(uint64_t ms);
+
+
+/*!<
+ * config functions
  * */
 void set_SYS_hardware_config(PWR_level_t power_level, uint32_t HSE_frequency);
 void set_SYS_oscilator_config(
@@ -82,9 +108,6 @@ void set_SYS_PLL_config(PLL_CLK_SRC_t src, uint8_t PLL_M, uint8_t PLL_N, PLL_P_t
 void set_SYS_clock_config(SYS_CLK_SRC_t src, AHB_DIV_t AHB_div, APBx_DIV_t APB1_div, APBx_DIV_t APB2_div);
 void set_SYS_RTC_config(RTC_SRC_t RTC_src, uint8_t RTC_div);
 void set_SYS_tick_config(uint8_t interrupt_enable);
-
-extern void sys_reset(void);
-void sys_init(void);
 
 
 #endif //STM32F412_SYS_H

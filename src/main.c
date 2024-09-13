@@ -1,14 +1,10 @@
 #include "types.h"
 #include "periph.h"
 #include "sys.h"
-
+#include "gpio.h"
 
 #define PIN 8
 
-void delay_ms(uint64_t ms) {
-	uint64_t start = tick;
-	while ((tick - start) < ms) {}
-}
 
 // application
 void main(void) {
@@ -19,12 +15,13 @@ void main(void) {
 	set_SYS_tick_config(1);												// enable SYS_tick with interrupt
 	sys_init();															// write settings
 
-	RCC->AHB1ENR |= (0x1 << 2) | 0x1;
-	GPIOA->MODER |= 0x1 << (2*PIN);
+	enable_GPIO(GPIOA);
+	GPIOA->MODER |= 0b01 << (2*PIN);
+
 	while (1) {
 		GPIOA->BSRR = 0x1 << PIN;
-		delay_ms(1000);
+		delay_ms(50);
 		GPIOA->BSRR = 0x10000 << PIN;
-		delay_ms(1000);
+		delay_ms(50);
 	}
 }

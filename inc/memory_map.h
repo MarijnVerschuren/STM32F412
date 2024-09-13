@@ -132,12 +132,26 @@
 
 
 /*!<
- * peripheral register maps
+ * APB1 peripheral register maps
  * */
 /*!< PWR */
 #define PWR_CR			0x00
 #define PWR_CSR			0x04
 
+
+/*!<
+ * AHB1 peripheral register maps
+ * */
+/*!< GPIO */
+#define GPIO_MODER		0x00
+#define GPIO_OTYPER		0x04
+#define GPIO_OSPEEDR	0x08
+#define GPIO_PUPDR		0x0C
+#define GPIO_IDR		0x10
+#define GPIO_ODR		0x14
+#define GPIO_BSRR		0x18
+#define GPIO_LCKR		0x1C
+#define GPIO_AFR		0x20
 /*!< RCC */
 #define RCC_CR			0x00
 #define RCC_PLLCFGR		0x04

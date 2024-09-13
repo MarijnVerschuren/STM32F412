@@ -4,13 +4,13 @@
 // include memory map defines with the C preprocessor
 #include "memory_map.h"
 
-
+// objects
 .global tick
 .global sys_config
-
+// functions
 .global sys_reset
 .global sys_tick_handler
-
+.global delay_ms
 
 /*!<
  * variables
@@ -35,6 +35,7 @@ sys_config:
 .section .text.sys_reset
 .type sys_reset, %function		/* void sys_reset(void); */
 sys_reset:
+	push {r4, r5}
 	ldr r0, =RCC_BASE			// save RCC BASE
 	ldr r1, =FLASH_BASE			// save FLASH BASE
 	ldr r2, =SCB_BASE			// save SCB_BASE
@@ -64,7 +65,8 @@ sys_reset:
 	// PWR (update VOS scale for 16MHz)
 	mov r4, #0x00004000			// VOS scale 3 setting (mininum nominal)
 	str r4, [r3, PWR_CR]		// save CR
-
+	
+	pop {r4-r5}
 	bx lr						// return
 .size sys_reset, .-sys_reset
 
@@ -72,13 +74,29 @@ sys_reset:
 .section .text.sys_tick_handler
 .type sys_tick_handler, %function	/* void sys_tick_handler(void); */
 sys_tick_handler:
-	push {r0, r1, r2}			// push used registers to the stack
-	ldr r2, =tick				// load tick ptr 
-	ldmia r2, {r0-r1}			// load multiple src  (2 * 32-bit)
+	ldr ip, =tick				// load tick ptr 
+	ldmia ip, {r0-r1}			// load multiple src  (2 * 32-bit)
 	adds r0, r0, #1				// inc low word
-	adc r1, r1, #0				// add carry to high word
-	stm r2, {r0-r1}				// store multiple dst (2 * 32-bit)
-	pop {r0, r1, r2}			// pop saved registers from the stack
+	adc  r1, r1, #0				// add carry to high word
+	stm ip, {r0-r1}				// store multiple dst (2 * 32-bit)
 	bx lr						// return
 .size sys_tick_handler, .-sys_tick_handler
+
+
+.section .text.delay_ms
+.type delay_ms, %function			/* void delay_ms(uint64_t); */
+delay_ms:
+	push {r4, r5}
+	ldr ip, =tick
+	ldmia ip, {r2, r3}
+.delay_loop:	
+	ldmia ip, {r4, r5}
+	subs r4, r4, r2
+	sbc  r5, r5, r3
+	cmp  r4, r0
+	sbcs r5, r5, r1
+	bcc .delay_loop
+	pop {r4, r5}
+	bx lr
+.size delay_ms, .-delay_ms
 
