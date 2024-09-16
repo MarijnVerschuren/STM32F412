@@ -33,14 +33,14 @@ add_compile_options(
 #        -Werror
 #        -Wall
 #        -Wextra
-        -Wcast-align
-        -Wconversion
-        -Wsign-conversion
-        -Wshadow
-        -Wlogical-op
-        -Wsuggest-final-types
-        -Wsuggest-final-methods
-        -pedantic
+#        -Wcast-align
+#        -Wconversion
+#        -Wsign-conversion
+#        -Wshadow
+#        -Wlogical-op
+#        -Wsuggest-final-types
+#        -Wsuggest-final-methods
+#        -pedantic
 )
 
 include_directories(
@@ -59,6 +59,7 @@ add_executable(${PROJECT_NAME}
         src/main.c
         src/sys.c
         src/gpio.S
+        src/usart.S
 )
 
 target_link_libraries(${PROJECT_NAME}

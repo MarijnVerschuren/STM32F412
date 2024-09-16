@@ -2,8 +2,8 @@
 #include "periph.h"
 #include "sys.h"
 #include "gpio.h"
+#include "usart.h"
 
-#define PIN 8
 
 
 // application
@@ -15,13 +15,14 @@ void main(void) {
 	set_SYS_tick_config(1);												// enable SYS_tick with interrupt
 	sys_init();															// write settings
 
-	enable_GPIO(GPIOA);
-	GPIOA->MODER |= 0b01 << (2*PIN);
+	//fconfig_GPIO(GPIOA, 8, GPIO_output, GPIO_pull_up, GPIO_open_drain, GPIO_medium_speed, 10);
+	config_GPIO(GPIOC, 13, GPIO_output, GPIO_pull_up, GPIO_open_drain);
+
+	volatile RCC_t* rcc = RCC;
+	volatile USART_t* usart = USART1;
 
 	while (1) {
-		GPIOA->BSRR = 0x1 << PIN;
-		delay_ms(50);
-		GPIOA->BSRR = 0x10000 << PIN;
-		delay_ms(50);
+		GPIO_toggle(GPIOC, 13);
+		delay_ms(200);
 	}
 }

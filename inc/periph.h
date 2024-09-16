@@ -14,8 +14,13 @@
 
 /*!< APB1 peripherals */
 #define PWR						((PWR_t*)PWR_BASE)
+#define USART2					((USART_t*)USART2_BASE)
+#define USART3					((USART_t*)USART3_BASE)
+
 
 /*!< APB2 peripherals */
+#define USART1					((USART_t*)USART1_BASE)
+#define USART6					((USART_t*)USART6_BASE)
 
 /*!< AHB1 peripherals */
 #define GPIOA					((GPIO_t*)GPIOA_BASE)
@@ -66,11 +71,24 @@ typedef struct {
 /*!<
  * peripheral types
  * */
+/*!< PWR */
 typedef struct {
 	_IO uint32_t CR;   /* power control                                  0x00 */
 	_IO uint32_t CSR;  /* power control and status                       0x04 */
 } PWR_t;
 
+/*!< FLASH */
+typedef struct {
+	_IO uint32_t	ACR;			/* access control                    0x00 */
+	_IO uint32_t	KEYR;			/* key                               0x04 */
+	_IO uint32_t	OPTKEYR;		/* option key                        0x08 */
+	_IO uint32_t	SR;				/* status                            0x0C */
+	_IO uint32_t	CR;				/* control                           0x10 */
+	_IO uint32_t	OPTCR;			/* option control                    0x14 */
+	_IO uint32_t	OPTCR1;			/* option control 1                  0x18 */
+} FLASH_t;
+
+/*!< RCC */
 typedef struct {
 	_IO uint32_t	CR;				/* clock control                     0x00 */
 	_IO uint32_t	PLLCFGR;		/* PLL configuration                 0x04 */
@@ -105,16 +123,9 @@ typedef struct {
 	_IO uint32_t	DCKCFGR1;		/* dedicated clocks configuration 1  0x94 */
 } RCC_t;
 
-typedef struct {
-	_IO uint32_t	ACR;			/* access control                    0x00 */
-	_IO uint32_t	KEYR;			/* key                               0x04 */
-	_IO uint32_t	OPTKEYR;		/* option key                        0x08 */
-	_IO uint32_t	SR;				/* status                            0x0C */
-	_IO uint32_t	CR;				/* control                           0x10 */
-	_IO uint32_t	OPTCR;			/* option control                    0x14 */
-	_IO uint32_t	OPTCR1;			/* option control 1                  0x18 */
-} FLASH_t;
+/*!< SYSCFG TODO */
 
+/*!< GPIO */
 typedef struct {
 	_IO uint32_t	MODER;			/* port mode                         0x00 */
 	_IO uint32_t	OTYPER;			/* port output type                  0x04 */
@@ -127,6 +138,30 @@ typedef struct {
 	_IO uint32_t	AFR[2];			/* alternate function           0x20-0x24 */
 } GPIO_t;
 
+/*!< EXTI TODO */
+
+/*!< TIM TODO */
+
+/*!< RTC TODO */
+
+/*!< USART */
+typedef struct {
+	_IO uint32_t SR;         /*!< status                                 0x00 */
+	_IO uint32_t DR;         /*!< data                                   0x04 */
+	_IO uint32_t BRR;        /*!< baud rate                              0x08 */
+	_IO uint32_t CR1;        /*!< Control 1                              0x0C */
+	_IO uint32_t CR2;        /*!< Control 2                              0x10 */
+	_IO uint32_t CR3;        /*!< Control 3                              0x14 */
+	_IO uint32_t GTPR;       /*!< Guard time and prescaler               0x18 */
+} USART_t;
+
+/*!< IWDG TODO */
+
+/*!< CRC TODO */
+
+/*!< RNG TODO */
+
+/*!< ADC TODO */
 
 
 #endif // STM32F412_PERIPH_H
