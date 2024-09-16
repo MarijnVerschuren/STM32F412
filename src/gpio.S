@@ -11,6 +11,7 @@
 .global disable_GPIO
 .global reset_GPIO
 .global fconfig_GPIO
+.global aconfig_GPIO
 .global config_GPIO
 .global GPIO_write
 .global GPIO_toggle
@@ -94,9 +95,8 @@ fconfig_GPIO:
 	ldmia sp, {r0, r1}		// restore r0 and r1 (port, pin)
 	bl reset_GPIO			// call reset_GPIO, r0-r3 destoyed
 	pop {r0-r3, lr}			// restore r0-r3 and lr
+	mov ip, sp				// save argument stack to ip
 	push {r4-r10}			// save non volatile registers
-	mov ip, sp				// copy sp to ip for indexing
-	add ip, #28				// index to argument stack
 	ldmia ip, {r4-r6}		// load args (type, speed, AF)
 	mov ip, r0				// load port ptr to free r0
 	ldmia ip, {r7-r10}		// load registers
@@ -128,7 +128,7 @@ fconfig_GPIO:
 .type config_GPIO, %function
 config_GPIO:
 	eor ip, ip, ip
-	push {lr, ip}
+	push {ip, lr}
 	push {ip}
 	ldr ip, [sp, 0xC]
 	push {ip}

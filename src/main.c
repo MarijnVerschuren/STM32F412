@@ -1,4 +1,4 @@
-#include "types.h"
+#include "base.h"
 #include "periph.h"
 #include "sys.h"
 #include "gpio.h"
@@ -15,11 +15,14 @@ void main(void) {
 	set_SYS_tick_config(1);												// enable SYS_tick with interrupt
 	sys_init();															// write settings
 
-	//fconfig_GPIO(GPIOA, 8, GPIO_output, GPIO_pull_up, GPIO_open_drain, GPIO_medium_speed, 10);
-	config_GPIO(GPIOC, 13, GPIO_output, GPIO_pull_up, GPIO_open_drain);
+
+	//fconfig_GPIO(GPIOA, 8, GPIO_output, GPIO_pull_up, GPIO_open_drain, GPIO_high_speed, 10);
+	//config_GPIO(GPIOC, 13, GPIO_output, GPIO_pull_up, GPIO_open_drain);
 
 	volatile RCC_t* rcc = RCC;
 	volatile USART_t* usart = USART1;
+	volatile GPIO_t* ga = GPIOA;
+	fconfig_USART(USART_PIN_TEST_0, USART_PIN_TEST_1, 115200, USART_OVERSAMPLING_16);
 
 	while (1) {
 		GPIO_toggle(GPIOC, 13);

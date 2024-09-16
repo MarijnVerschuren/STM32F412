@@ -5,7 +5,7 @@
 #ifndef STM32F412_PERIPH_H
 #define STM32F412_PERIPH_H
 #include "memory_map.h"
-#include "types.h"
+#include "base.h"
 
 
 /*!< core peripherals */

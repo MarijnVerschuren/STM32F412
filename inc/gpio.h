@@ -6,6 +6,10 @@
 #define STM32F412_GPIO_H
 #include "periph.h"
 
+
+/*!<
+ * types
+ * */
 typedef enum {
 	GPIO_input =		0b00,
 	GPIO_output =		0b01,
