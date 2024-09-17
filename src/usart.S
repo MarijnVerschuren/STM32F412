@@ -5,13 +5,16 @@
 #include "memory_map.h"	// define include
 .include "base.s"		// macro include
 
+// externals
+.global APB1_clock_frequency
+.global APB2_clock_frequency
 
 // functions
 .global USART_to_int
 .global enable_USART
 .global disable_USART
-.global fconfig_USART
-.global config_USART
+.global fconfig_UART
+.global config_UART
 
 
 /*!< TODO: inline? or externalize?
@@ -66,16 +69,19 @@ disable_USART:
 	bx r3
 .size disable_USART, .-disable_USART	/* void fconfig_USART(USART_GPIO_t, USART_GPIO_t, uint32_t, USART_oversampling_t); */
 
-.section .text.fconfig_USART
-.type fconfig_USART, %function
-fconfig_USART:
-	push {r2-r11, lr}
+.section .text.fconfig_UART
+.type fconfig_UART, %function
+fconfig_UART:
+	push {r2-r8, lr}
+	mov r8, #0x2008			// USART, TX enable
 	// input switching
 	cmp r1, #0
 	beq fconfig_single_pin
+	orr r8, r8, #0b100		// RX enable
 	cmp r0, #0
-	it eq
+	itt eq
 	moveq r0, r1
+	biceq r8, r8, #0b1000	// TX disable
 	beq fconfig_single_pin
 	push {r1}
 	// check input
@@ -120,27 +126,38 @@ fconfig_single_pin:
 	dpin_clk r0, r7
 	cmp r0, #1
 	ittee lo
-	movcc r0,	// todo APB1_freq
-	movcc ip,	// todo APB1_base
-	movcs r0,	// todo APB2_freq
-	movcs ip,	// todo APB2_base
-
-// uint16_t uart_div = UART_division(uart, baud) * (oversampling + 1);
-// enable_USART_clock(uart);
-// uart->BRR = ((uart_div & 0xfff0) | ((uart_div & 0xf) >> oversampling));
-// uart->CR1 = (
-// 	(USART_CR1_TE * tx_enable) |
-// 	(USART_CR1_RE * rx_enable) |
-// 	USART_CR1_UE
-// );
-
+	ldrcc r0, =APB1_clock_frequency
+	ldrcc ip, =APB1PERIPH_BASE
+	ldrcs r0, =APB2_clock_frequency
+	ldrcs ip, =APB2PERIPH_BASE
+	ldr r1, [r0]
+	
+	udiv r5, r1, r2
+	lsl r5, r5, r3
+	dpin_periph r2, r7
+	add r0, ip, r2, lsl #10
+	mov r4, r0
+	mov r6, r3
+	bl enable_USART
+	
+	// R4 (uart*), R5 (uart_div), R6 (os)
+	mov r0, #0xFFF0
+	and r0, r5, r0
+	and r5, r5, #0xF
+	lsr r5, r5, r6
+	orr r0, r0, r5
+	str r0, [r4, USART_BRR]
+	str r8, [r4, USART_CR1]
 fconfig_error:
-	pop {r4-r11, lr}
+	pop {r4-r8, lr}
 	bx lr
-.size fconfig_USART, .-fconfig_USART	/* void config_USART(USART_GPIO_t, USART_GPIO_t, uint32_t); */
+.size fconfig_UART, .-fconfig_UART	/* void config_USART(USART_GPIO_t, USART_GPIO_t, uint32_t); */
 
-.section .text.config_USART
-.type config_USART, %function
-config_USART:
-	bx lr
-.size config_USART, .-config_USART
+.section .text.config_UART
+.type config_UART, %function
+config_UART:
+	mov r4, lr
+	mov r3, #0b0
+	bl fconfig_UART
+	bx r4
+.size config_UART, .-config_UART
