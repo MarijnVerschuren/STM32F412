@@ -11,6 +11,7 @@ void main(void) {
 	set_SYS_hardware_config(PWR_LVL_NOM, 25000000);						// 3v3, HSE@25MHz
 	set_SYS_oscilator_config(0, 1, 0, 1, 1, 0, 0, 0, 0);				// enable HSE, LSE, CSS and the backup-domain
 	set_SYS_PLL_config(PLL_CLK_SRC_HSE, 12U, 96U, PLL_P_DIV_2, 0, 0);	// enable PLL @ 25MHz / 12 * 96 / 2 -> 100MHz
+	set_SYS_backup_domain_config();										// enable backup domain
 	set_SYS_RTC_config(RTC_SRC_LSE, 0U);								// enable RTC
 	set_SYS_clock_config(SYS_CLK_SRC_PLL_P, AHB_CLK_NO_DIV, APBx_CLK_DIV2, APBx_CLK_NO_DIV);
 	set_SYS_tick_config(1);												// enable SYS_tick with interrupt
@@ -35,11 +36,37 @@ void main(void) {
 	time.sec = 10;
 	sconfig_RTC(time);
 
-	RTC_timestamp_t t;
+	volatile struct {
+		uint32_t su	: 4;
+		uint32_t st	: 3;
+		uint32_t _0	: 1;
+		uint32_t mu	: 4;
+		uint32_t mt	: 3;
+		uint32_t _1 : 1;
+		uint32_t hu	: 4;
+		uint32_t ht	: 2;
+		uint32_t _2 : 10
+	} tr;
+	volatile struct {
+		uint32_t du	: 4;
+		uint32_t dt	: 2;
+		uint32_t _0	: 2;
+		uint32_t mu	: 4;
+		uint32_t mt	: 1;
+		uint32_t wd : 3;
+		uint32_t yu	: 4;
+		uint32_t yt	: 4;
+		uint32_t _2 : 8;
+	} dr;
 
 	while (1) {
-		GPIO_toggle(GPIOC, 13);
-		USART_print(USART1, "Hello world!", 200);
-		t = get_RTC();
+		//GPIO_toggle(GPIOC, 13);
+		//USART_print(USART1, "Hello world!", 200);
+
+		//*((uint32_t*)&tr) = RTC->TR;
+		//*((uint32_t*)&dr) = RTC->DR;
+		//(void)tr;
+
+		uint32_t ep = RTC_epoch();
 	}
 }

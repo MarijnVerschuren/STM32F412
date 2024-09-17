@@ -11,23 +11,15 @@ void fconfig_RTC(
 ) {
 	RCC->APB1ENR |= 0x400;					// enable RCC bus clock
 	PWR->CR |= 0x100UL;						// enable BDP
+	while (!(PWR->CR & 0x100UL));
 	RTC->WPR = 0xCAUL;						// write key 0 into the write protect register
 	RTC->WPR = 0x53UL;						// write key 1 into the write protect register
 
 	RTC->ISR |=	0x80UL;						// enter initialization mode (RTC is stopped)
 	while (!(RTC->ISR & 0x40UL));			// wait until RTC enters initialization mode
-	RTC->PRER = (
-		((async_pre & 0x7F) << 16)	|		// asynchronous prescaler
-		((sync_pre & 0x7FFF) << 0)			// synchronous prescaler
-	);
+	RTC->PRER = ((sync_pre - 1) & 0x7FFF);	// write synchronous prescaler		NOTE: there must be TWO writes to PRER
+	RTC->PRER |= (((async_pre - 1) & 0x7F) << 16);	// asynchronous prescaler	NOTE: there must be TWO writes to PRER
 
-	RTC->CR =  (
-		0x00000020UL					|	// enable shadow register bypass
-		((wakeup & 0b1U) << 10U)		|	// set wake-up enable setting
-		(((wakeup >> 1) & 0b1U) << 14U)	|	// set wake-up interrupt setting
-		(wakeup_div << 0U)					// set wake-up clock setting
-	);
-	RTC->WUTR = wakeup_reload;				// set wake-up timer reload
 	RTC->DR = (
 		((time.year / 10U) << 20U)	|		// set year tens
 		((time.year % 10U) << 16U)	|		// set year units
@@ -46,6 +38,13 @@ void fconfig_RTC(
 		((time.sec % 10U) << 0U)			// set sec units
 	);
 
+	RTC->CR =  (
+			0x00000020UL					|	// enable shadow register bypass
+			((wakeup & 0b1U) << 10U)		|	// set wake-up enable setting
+			(((wakeup >> 1) & 0b1U) << 14U)	|	// set wake-up interrupt setting
+			(wakeup_div << 0U)					// set wake-up clock setting
+	);
+	RTC->WUTR = wakeup_reload;				// set wake-up timer reload
 
 	RTC->ISR &=	~0x80UL;					// exit initialization mode (RTC is started)
 	while (RTC->ISR & 0x40UL);				// wait until RTC exits initialization mode
@@ -72,16 +71,11 @@ void reset_RTC() {
 	// TODO
 }
 
-RTC_timestamp_t get_RTC(void) {
-	uint32_t TR = RTC->TR;
-	uint32_t DR = RTC->TR;
-	RTC_timestamp_t t;
-	t.year =	(((DR >> 20U) & 0xFU) * 10) + ((DR >> 16U) & 0xFU);
-	t.month =	(((DR >> 12U) & 0x1U) * 10) + ((DR >> 8U) & 0xFU);
-	t.day =		(((DR >> 4U) & 0x3U) * 10) + ((DR >> 0U) & 0xFU);
-	t.day_unit =((DR >> 13U) & 0x7U);
-	t.hour =	(((TR >> 20U) & 0x3U) * 10) + ((TR >> 16U) & 0xFU);
-	t.min =		(((TR >> 12U) & 0x7U) * 10) + ((TR >> 8U) & 0xFU);
-	t.sec =		(((TR >> 4U) & 0x7U) * 10) + ((TR >> 0U) & 0xFU);
-	return t;
+// misc
+uint32_t RTC_unix(void) {
+	uint32_t epoch;
+
+}
+void unix_RTC(uint32_t epoch) {
+	// TODO: if this func works it can be used as template for init instead of RTC_timestamp_t
 }

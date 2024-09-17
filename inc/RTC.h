@@ -57,8 +57,10 @@ void sconfig_RTC(RTC_timestamp_t time);
 void reset_RTC();
 // extra
 void config_RTC_ext_ts();  // TODO
-// use
-RTC_timestamp_t get_RTC(void);
+
+// misc
+uint32_t RTC_unix(void);
+void unix_RTC(uint32_t epoch);
 
 
 

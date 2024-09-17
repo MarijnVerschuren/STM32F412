@@ -108,7 +108,7 @@ void set_SYS_clock_config(SYS_CLK_SRC_t src, AHB_DIV_t AHB_div, APBx_DIV_t APB1_
 	sys_config.APB1_div =					APB1_div;
 	sys_config.APB2_div =					APB2_div;
 }
-void set_SYS_backup_domain_config() {
+void set_SYS_backup_domain_config(void) {
 	sys_config.BKUP_regulator_enable =		0b1U;
 }
 void set_SYS_RTC_config(RTC_SRC_t RTC_src, uint8_t RTC_HSE_div) {
@@ -147,6 +147,15 @@ void sys_init(void) {
 	AHB_clock_frequency = SYS_clock_frequency;	if (sys_config.AHB_div) { AHB_clock_frequency /= (2 << (sys_config.AHB_div & 0b111U)); }
 	APB1_clock_frequency = AHB_clock_frequency;	if (sys_config.APB1_div) { APB1_clock_frequency /= (2 << (sys_config.APB1_div & 0b11U)); }
 	APB2_clock_frequency = AHB_clock_frequency;	if (sys_config.APB2_div) { APB2_clock_frequency /= (2 << (sys_config.APB2_div & 0b11U)); }
+	switch (sys_config.RTC_src) {
+	case RTC_SRC_NONE:	RTC_clock_frequency = 0x00000000;			break;
+	case RTC_SRC_LSE:	RTC_clock_frequency = LSE_clock_frequency;	break;
+	case RTC_SRC_LSI:	RTC_clock_frequency = LSI_clock_frequency;	break;
+	case RTC_SRC_HSE:
+		RTC_clock_frequency = sys_config.RTC_HSE_div > 1 ? \
+			HSE_clock_frequency / sys_config.RTC_HSE_div : 0;
+		break;
+	}
 	// PLL settings
 	RCC->PLLCFGR = (
 		(sys_config.PLL_M << 0U)					|
@@ -198,7 +207,7 @@ void sys_init(void) {
 	if (!sys_config.HSI_enable) { RCC->CR &= ~0x00000001; }  // disable HSI
 	// backup domain settings
 	PWR->CR |= 0x100UL;  // disable backup domain write protection
-	while (!(PWR->CR & 0x100UL)) { PWR->CR |= 0x100UL; }
+	while (!(PWR->CR & 0x100UL));
 	PWR->CSR |= (sys_config.BKUP_regulator_enable << 9U);
 	while (((PWR->CSR >> 9U) & 0b1U) != sys_config.BKUP_regulator_enable);
 	// LS clock settings
