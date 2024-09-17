@@ -50,13 +50,15 @@ volatile extern struct {
 	uint32_t AHB_div					: 4;  // AHB_DIV_t
 	uint32_t APB1_div					: 3;  // APBx_DIV_t
 	uint32_t APB2_div					: 3;  // APBx_DIV_t
-	uint32_t RTC_div					: 5;
+	uint32_t RTC_HSE_div				: 5;
 	// RCC_BDCR			config TODO
 	uint32_t LSE_enable					: 1;
 	uint32_t LSE_bypass_enable			: 1;
 	uint32_t LSE_low_power_disable		: 1;
 	uint32_t RTC_enable					: 1;
 	uint32_t RTC_src					: 2;  // RTC_SRC_t
+	// PWR_CSR
+	uint32_t BKUP_regulator_enable		: 1;
 	// RCC_CSR			config
 	uint32_t LSI_enable					: 1;
 	// FLASH_ TODO
@@ -68,7 +70,7 @@ volatile extern struct {
 	uint32_t SYS_tick_interrupt_enable	: 1;
 	// hardware info
 	uint32_t PWR_level					: 2;  // PWR_level_t
-	uint32_t HSE_frequency				: 29;
+	uint32_t HSE_frequency				: 28;
 } sys_config;
 
 
@@ -106,10 +108,13 @@ void set_SYS_clock_config(SYS_CLK_SRC_t src, AHB_DIV_t AHB_div, APBx_DIV_t APB1_
 	sys_config.APB1_div =					APB1_div;
 	sys_config.APB2_div =					APB2_div;
 }
-void set_SYS_RTC_config(RTC_SRC_t RTC_src, uint8_t RTC_div) {
+void set_SYS_backup_domain_config() {
+	sys_config.BKUP_regulator_enable =		0b1U;
+}
+void set_SYS_RTC_config(RTC_SRC_t RTC_src, uint8_t RTC_HSE_div) {
 	sys_config.RTC_enable =					0b1U;
 	sys_config.RTC_src =					RTC_src;
-	sys_config.RTC_div =					RTC_div;
+	sys_config.RTC_HSE_div =				RTC_HSE_div;
 }
 void set_SYS_FLASH_config(uint8_t prefetch_enable, uint8_t instruction_cache_enable, uint8_t data_cache_enable) {
 	sys_config.FLASH_prefetch =				prefetch_enable;
@@ -187,10 +192,15 @@ void sys_init(void) {
 		(sys_config.AHB_div << 4U)					|
 		(sys_config.APB1_div << 10U)				|
 		(sys_config.APB2_div << 13U)				|
-		(sys_config.RTC_div << 16U)
+		(sys_config.RTC_HSE_div << 16U)
 	);
 	while (((RCC->CFGR >> 2U) & 0b11U) != sys_config.sys_clk_src);
 	if (!sys_config.HSI_enable) { RCC->CR &= ~0x00000001; }  // disable HSI
+	// backup domain settings
+	PWR->CR |= 0x100UL;  // disable backup domain write protection
+	while (!(PWR->CR & 0x100UL)) { PWR->CR |= 0x100UL; }
+	PWR->CSR |= (sys_config.BKUP_regulator_enable << 9U);
+	while (((PWR->CSR >> 9U) & 0b1U) != sys_config.BKUP_regulator_enable);
 	// LS clock settings
 	RCC->BDCR = (
 		(sys_config.LSE_enable << 0U)				|
@@ -202,6 +212,7 @@ void sys_init(void) {
 	while (((RCC->BDCR >> 1U) & 0b1U) != sys_config.LSE_enable);
 	RCC->CSR = (sys_config.LSI_enable);
 	while (((RCC->CSR >> 1U) & 0b1U) != sys_config.LSI_enable);
+	PWR->CR &= ~0x100UL;  // enable backup domain write protection
 
 	SYS_TICK->LOAD = (AHB_clock_frequency / 8000) - 1;						/* set reload register, clk src: AHB/8 */
 	SYS_TICK->VAL  = 0;														/* load counter value  */

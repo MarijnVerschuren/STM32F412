@@ -106,7 +106,7 @@ void set_SYS_oscilator_config(
 );
 void set_SYS_PLL_config(PLL_CLK_SRC_t src, uint8_t PLL_M, uint8_t PLL_N, PLL_P_t PLL_P, uint8_t PLL_Q, uint8_t PLL_R);
 void set_SYS_clock_config(SYS_CLK_SRC_t src, AHB_DIV_t AHB_div, APBx_DIV_t APB1_div, APBx_DIV_t APB2_div);
-void set_SYS_RTC_config(RTC_SRC_t RTC_src, uint8_t RTC_div);
+void set_SYS_RTC_config(RTC_SRC_t RTC_src, uint8_t RTC_HSE_div);
 void set_SYS_tick_config(uint8_t interrupt_enable);
 
 

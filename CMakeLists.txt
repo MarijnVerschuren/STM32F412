@@ -61,6 +61,7 @@ add_executable(${PROJECT_NAME}
         src/gpio.S
         src/usart.c
         src/usart.S
+        src/RTC.c
 )
 
 target_link_libraries(${PROJECT_NAME}

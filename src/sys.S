@@ -51,6 +51,8 @@ sys_reset:
 	str r4, [r0, RCC_CR]		// clear CR[8:32]
 	// reset RCC_CIR
 	str r5, [r0, RCC_CIR]		// clear CIR
+	// enable core devices
+	// TODO: enable PWR in RCC!!!!!!!
 	
 	// FLASH (update flash latency for 16MHz)
 	mov r4, #0x00				// default FLASH latency at 16MHz

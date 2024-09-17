@@ -16,6 +16,7 @@
 #define PWR						((PWR_t*)PWR_BASE)
 #define USART2					((USART_t*)USART2_BASE)
 #define USART3					((USART_t*)USART3_BASE)
+#define RTC						((RTC_t*)RTC_BASE)
 
 
 /*!< APB2 peripherals */
@@ -56,15 +57,15 @@ typedef struct {  // TODO:
 	_I  uint32_t	ADR;			/* auxiliary feature                 0x4C */
 	_I  uint32_t	MMFR[4U];		/* memory model feature         0x50-0x5C */
 	_I  uint32_t	ISAR[5U];		/* instruction set attributes   0x60-0x70 */
-	uint32_t		RESERVED0[5U];	/*                              0x74-0x84 */
+	uint32_t		_0[5U];			/*                              0x74-0x84 */
 	_IO uint32_t	CPACR;			/* coprocessor access control        0x88 */
 } SCB_t;
 
 typedef struct {
-	_IO uint32_t CTRL;				/* control and status                0x00 */
-	_IO uint32_t LOAD;				/* reload value                      0x04 */
-	_IO uint32_t VAL;				/* current value                     0x08 */
-	_I  uint32_t CALIB;				/* calibration                       0x0C */
+	_IO uint32_t	CTRL;			/* control and status                0x00 */
+	_IO uint32_t	LOAD;			/* reload value                      0x04 */
+	_IO uint32_t	VAL;			/* current value                     0x08 */
+	_I  uint32_t	CALIB;			/* calibration                       0x0C */
 } SYS_TICK_t;
 
 
@@ -73,8 +74,8 @@ typedef struct {
  * */
 /*!< PWR */
 typedef struct {
-	_IO uint32_t CR;   /* power control                                  0x00 */
-	_IO uint32_t CSR;  /* power control and status                       0x04 */
+	_IO uint32_t	CR;				/* power control                     0x00 */
+	_IO uint32_t	CSR;			/* power control and status          0x04 */
 } PWR_t;
 
 /*!< FLASH */
@@ -96,28 +97,28 @@ typedef struct {
 	_IO uint32_t	CIR;			/* clock interrupt                   0x0C */
 	_IO uint32_t	AHB1RSTR;		/* AHB1 peripheral disable           0x10 */
 	_IO uint32_t	AHB2RSTR;		/* AHB2 peripheral disable           0x14 */
-	uint32_t		RESERVED0[2];	/*                              0x18-0x1C */
+		uint32_t	_0[2];			/*                              0x18-0x1C */
 	_IO uint32_t	APB1RSTR;		/* APB1 peripheral disable           0x20 */
 	_IO uint32_t	APB2RSTR;		/* APB2 peripheral disable           0x24 */
-	uint32_t		RESERVED1[2];	/*                              0x28-0x2C */
+		uint32_t	_1[2];			/*                              0x28-0x2C */
 	_IO uint32_t	AHB1ENR;		/* AHB1 peripheral enable            0x30 */
 	_IO uint32_t	AHB2ENR;		/* AHB2 peripheral enable            0x34 */
-	uint32_t		RESERVED2[2];	/*                              0x38-0x3C */
+		uint32_t	_2[2];			/*                              0x38-0x3C */
 	_IO uint32_t	APB1ENR;		/* APB1 peripheral enable            0x40 */
 	_IO uint32_t	APB2ENR;		/* APB2 peripheral enable            0x44 */
-	uint32_t		RESERVED3[2];	/*                              0x48-0x4C */
+		uint32_t	_3[2];			/*                              0x48-0x4C */
 	_IO uint32_t	AHB1LPENR;		/* AHB1 peripheral low power enable  0x50 */
 	_IO uint32_t	AHB2LPENR;		/* AHB2 peripheral low power enable  0x54 */
-	uint32_t		RESERVED4[2];	/*                              0x58-0x5C */
+		uint32_t	_4[2];			/*                              0x58-0x5C */
 	_IO uint32_t	APB1LPENR;		/* APB1 peripheral low power enable  0x60 */
 	_IO uint32_t	APB2LPENR;		/* APB2 peripheral low power enable  0x64 */
-	uint32_t		RESERVED5[2];	/*                              0x68-0x6C */
+		uint32_t	_5[2];			/*                              0x68-0x6C */
 	_IO uint32_t	BDCR;			/* backup domain control             0x70 */
 	_IO uint32_t	CSR;			/* clock control & status            0x74 */
-	uint32_t		RESERVED6[2];	/*                              0x78-0x7C */
+		uint32_t	_6[2];			/*                              0x78-0x7C */
 	_IO uint32_t	SSCGR;			/* spread spectrum clock generation  0x80 */
 	_IO uint32_t	PLLI2SCFGR;		/* PLLI2S configuration              0x84 */
-	uint32_t		RESERVED7;		/*                                   0x88 */
+		uint32_t	_7;				/*                                   0x88 */
 	_IO uint32_t	DCKCFGR;		/* dedicated clocks configuration    0x8C */
 	_IO uint32_t	CKGATENR;		/* clocks gated enable               0x90 */
 	_IO uint32_t	DCKCFGR1;		/* dedicated clocks configuration 1  0x94 */
@@ -143,16 +144,39 @@ typedef struct {
 /*!< TIM TODO */
 
 /*!< RTC TODO */
+typedef struct {
+	_IO uint32_t	TR;				/*!< time                            0x00 */
+	_IO uint32_t	DR;				/*!< date                            0x04 */
+	_IO uint32_t	CR;				/*!< control                         0x08 */
+	_IO uint32_t	ISR;			/*!< initialization and status       0x0C */
+	_IO uint32_t	PRER;			/*!< prescaler                       0x10 */
+	_IO uint32_t	WUTR;			/*!< wakeup timer                    0x14 */
+	_IO uint32_t	CALIBR;			/*!< calibration                     0x18 */
+	_IO uint32_t	ALRMAR;			/*!< alarm A                         0x1C */
+	_IO uint32_t	ALRMBR;			/*!< alarm B                         0x20 */
+	_IO uint32_t	WPR;			/*!< write protection                0x24 */
+	_IO uint32_t	SSR;			/*!< sub second                      0x28 */
+	_IO uint32_t	SHIFTR;			/*!< shift control                   0x2C */
+	_IO uint32_t	TSTR;			/*!< time stamp time                 0x30 */
+	_IO uint32_t	TSDR;			/*!< time stamp date                 0x34 */
+	_IO uint32_t	TSSSR;			/*!< time-stamp sub second           0x38 */
+	_IO uint32_t	CALR;			/*!< calibration                     0x3C */
+	_IO uint32_t	TAFCR;			/*!< tamper and af configuration     0x40 */
+	_IO uint32_t	ALRMASSR;		/*!< alarm A sub second              0x44 */
+	_IO uint32_t	ALRMBSSR;		/*!< alarm B sub second              0x48 */
+		uint32_t	_0;				/*                                   0x88 */
+	_IO uint32_t	BKPR[20];		/*!< backup registers           0x50-0x9C */
+} RTC_t;
 
 /*!< USART */
 typedef struct {
-	_IO uint32_t SR;         /*!< status                                 0x00 */
-	_IO uint32_t DR;         /*!< data                                   0x04 */
-	_IO uint32_t BRR;        /*!< baud rate                              0x08 */
-	_IO uint32_t CR1;        /*!< Control 1                              0x0C */
-	_IO uint32_t CR2;        /*!< Control 2                              0x10 */
-	_IO uint32_t CR3;        /*!< Control 3                              0x14 */
-	_IO uint32_t GTPR;       /*!< Guard time and prescaler               0x18 */
+	_IO uint32_t	SR;				/*!< status                          0x00 */
+	_IO uint32_t	DR;				/*!< data                            0x04 */
+	_IO uint32_t	BRR;			/*!< baud rate                       0x08 */
+	_IO uint32_t	CR1;			/*!< Control 1                       0x0C */
+	_IO uint32_t	CR2;			/*!< Control 2                       0x10 */
+	_IO uint32_t	CR3;			/*!< Control 3                       0x14 */
+	_IO uint32_t	GTPR;			/*!< Guard time and prescaler        0x18 */
 } USART_t;
 
 /*!< IWDG TODO */
