@@ -17,6 +17,7 @@ typedef unsigned long		uint32_t;
 typedef unsigned long long	uint64_t;
 
 #define _I	volatile const
+#define _O	volatile
 #define _IO	volatile
 
 #define NULL ((void*)0x00000000UL)

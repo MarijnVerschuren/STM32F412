@@ -10,6 +10,7 @@
 
 /*!< core peripherals */
 #define SCB						((SCB_t*)SCB_BASE)
+#define NVIC					((NVIC_t*)NVIC_BASE)
 #define SYS_TICK				((SYS_TICK_t*)SYS_TICK_BASE)
 
 /*!< APB1 peripherals */
@@ -60,6 +61,22 @@ typedef struct {  // TODO:
 	uint32_t		_0[5U];			/*                              0x74-0x84 */
 	_IO uint32_t	CPACR;			/* coprocessor access control        0x88 */
 } SCB_t;
+
+typedef struct {  // TODO
+	_IO uint32_t ISER[8U];               /*!< Offset: 0x000 (R/W)  Interrupt Set Enable Register */
+		uint32_t RESERVED0[24U];
+	_IO uint32_t ICER[8U];               /*!< Offset: 0x080 (R/W)  Interrupt Clear Enable Register */
+		uint32_t RESERVED1[24U];
+	_IO uint32_t ISPR[8U];               /*!< Offset: 0x100 (R/W)  Interrupt Set Pending Register */
+		uint32_t RESERVED2[24U];
+	_IO uint32_t ICPR[8U];               /*!< Offset: 0x180 (R/W)  Interrupt Clear Pending Register */
+		uint32_t RESERVED3[24U];
+	_IO uint32_t IABR[8U];               /*!< Offset: 0x200 (R/W)  Interrupt Active bit Register */
+		uint32_t RESERVED4[56U];
+	_IO uint8_t  IP[240U];               /*!< Offset: 0x300 (R/W)  Interrupt Priority Register (8Bit wide) */
+		uint32_t RESERVED5[644U];
+	_O	uint32_t STIR;                   /*!< Offset: 0xE00 ( /W)  Software Trigger Interrupt Register */
+} NVIC_t;
 
 typedef struct {
 	_IO uint32_t	CTRL;			/* control and status                0x00 */
