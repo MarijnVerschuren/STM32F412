@@ -46,6 +46,11 @@ typedef enum {
 	RTC_WAKEUP_ENABLE_INT =			0b11U
 } RTC_wakeup_t;
 
+typedef enum {
+	RTC_TS_POLARITY_RISING =		0b0U,
+	RTC_TS_POLARITY_FALLING =		0b1U,
+} RTC_TS_pol_t;
+
 
 // init
 void fconfig_RTC(
@@ -53,14 +58,13 @@ void fconfig_RTC(
 	RTC_wakeup_t wakeup, RTC_wakeup_div_t wakeup_div, uint16_t wakeup_reload
 );
 void config_RTC(RTC_timestamp_t time, RTC_wakeup_t wakeup, RTC_wakeup_div_t wakeup_div, uint16_t wakeup_reload);
-void sconfig_RTC(RTC_timestamp_t time);
+void uconfig_RTC(uint32_t time, RTC_wakeup_t wakeup, RTC_wakeup_div_t wakeup_div, uint16_t wakeup_reload);
 void reset_RTC();
 // extra
-void config_RTC_ext_ts();  // TODO
+void config_RTC_ext_ts(uint8_t int_enable, RTC_TS_pol_t pol);
 
 // misc
 uint32_t RTC_unix(void);
-void unix_RTC(uint32_t epoch);
 
 
 

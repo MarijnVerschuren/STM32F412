@@ -4,7 +4,38 @@
 #include "RTC.h"
 
 
-// 22.3.8
+// static const
+#define SEC_PER_MIN         0x3CUL
+#define SEC_PER_HOUR        0xE10UL
+#define SEC_PER_DAY         0x15180UL
+#define SEC_PER_month
+#define SEC_PER_YEAR		0x1E13380UL
+#define UNIX_YEAR 1970
+
+static uint8_t days_per_month[12U] = {
+		31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
+};
+
+// static
+static RTC_timestamp_t UNIX_BCD(uint32_t epoch) {
+	uint16_t _year = (epoch / SEC_PER_YEAR);	epoch %= SEC_PER_YEAR;
+	epoch -= (_year / 4 + (_year % 4 > 2)) * SEC_PER_DAY; _year += UNIX_YEAR;
+	uint8_t _month, leap_flag = ((!(_year % 4) && _year % 100) || !(_year % 400));
+	for (_month = 0; _month < 12; _month++) {
+		uint32_t sec = ((days_per_month[_month] + (leap_flag && _month == 1)) * SEC_PER_DAY);
+		if (sec > epoch) { break; } epoch -= sec;
+	}
+	RTC_timestamp_t t;
+	t.year = _year - 2000; t.month = _month + 1;
+	t.day =		(epoch / SEC_PER_DAY) + 1;	epoch %= SEC_PER_DAY;
+	t.hour =	(epoch / SEC_PER_HOUR);		epoch %= SEC_PER_HOUR;
+	t.min =		epoch / SEC_PER_MIN;		epoch %= SEC_PER_MIN;
+	t.sec =		epoch;
+	return t;
+}
+
+
+// init
 void fconfig_RTC(
 	uint8_t async_pre, uint16_t sync_pre, RTC_timestamp_t time,
 	RTC_wakeup_t wakeup, RTC_wakeup_div_t wakeup_div, uint16_t wakeup_reload
@@ -59,11 +90,11 @@ void config_RTC(RTC_timestamp_t time, RTC_wakeup_t wakeup, RTC_wakeup_div_t wake
 		wakeup_reload
 	);
 }
-void sconfig_RTC(RTC_timestamp_t time) {
+void uconfig_RTC(uint32_t epoch, RTC_wakeup_t wakeup, RTC_wakeup_div_t wakeup_div, uint16_t wakeup_reload) {
 	fconfig_RTC(
 		RTC_clock_frequency / 0x100U, 0x100U,
-		time, RTC_WAKEUP_DISABLE, RTC_WAKEUP_DIV16,
-		0x0000U
+		UNIX_BCD(epoch), wakeup, wakeup_div,
+		wakeup_reload
 	);
 }
 
@@ -71,11 +102,41 @@ void reset_RTC() {
 	// TODO
 }
 
+void config_RTC_ext_ts(uint8_t int_enable, RTC_TS_pol_t pol) {
+	PWR->CR |= 0x100UL;						// enable BDP
+	while (!(PWR->CR & 0x100UL));
+	RTC->WPR = 0xCAUL;						// write key 0 into the write protect register
+	RTC->WPR = 0x53UL;						// write key 1 into the write protect register
+
+	RTC->CR |= (
+		0x00000800UL			|			// enable timestamp
+		(int_enable << 15U)		|			// enable timestamp interrupt
+		(pol << 3U)
+	);
+	RTC->TAFCR &= ~(0b1UL << 17U);			// C13 selected as ts register
+
+	RTC->WPR = 0x0UL;						// re-enable write protection
+	PWR->CR &= ~0x100UL;					// disable BDP
+}
+
 // misc
 uint32_t RTC_unix(void) {
-	uint32_t epoch;
+	uint32_t DR = RTC->DR;
+	uint32_t TR = RTC->TR;
+	uint16_t year =		((((DR >> 20U) & 0xFU) * 10) + ((DR >> 16U) & 0xFU)) + 2000;
+	uint8_t	 month =	((((DR >> 12U) & 0x1U) * 10) + ((DR >> 8U) & 0xFU)) - 1;
+	uint8_t	 day =		((((DR >> 4U) & 0x3U) * 10) + ((DR >> 0U) & 0xFU)) - 1;
+	uint8_t	 hour =		((((TR >> 20U) & 0x3U) * 10) + ((TR >> 16U) & 0xFU));
+	uint8_t	 min =		((((TR >> 12U) & 0x7U) * 10) + ((TR >> 8U) & 0xFU));
+	uint8_t	 sec =		((((TR >> 4U) & 0x7U) * 10) + ((TR >> 0U) & 0xFU));
 
-}
-void unix_RTC(uint32_t epoch) {
-	// TODO: if this func works it can be used as template for init instead of RTC_timestamp_t
+	uint8_t leap_flag = ((!(year % 4) && year % 100) || !(year % 400));
+	year -= UNIX_YEAR; uint32_t epoch = year * SEC_PER_YEAR;
+	epoch += (year / 4 + (year % 4 > 2) + (leap_flag && month > 1)) * SEC_PER_DAY;
+	for (uint8_t i = 0; i < month; i++) { epoch += days_per_month[i] * SEC_PER_DAY; }
+	epoch += day * SEC_PER_DAY;
+	epoch += hour * SEC_PER_HOUR;
+	epoch += min * SEC_PER_MIN;
+	epoch += sec;
+	return epoch;
 }

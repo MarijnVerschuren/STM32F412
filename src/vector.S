@@ -24,6 +24,12 @@ IVT:
 .word pending_SV_handler
 .word sys_tick_handler
 // TODO: more interrupts
+.word 0				// WWDG_IRQn
+.word 0				// PVD_IRQn
+.word RTC_tamper_stamp_handler
+.word 0				// RTC_WKUP_IRQn
+.word 0				// FLASH_IRQn
+.word 0				// RCC_IRQn
 
 
 // default handler
