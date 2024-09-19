@@ -7,6 +7,7 @@
 
 
 void RTC_tamper_stamp_handler(void) {
+	//EXTI->PR |= 0x00200000UL;
 	for(;;);
 }
 
@@ -22,11 +23,12 @@ void main(void) {
 	set_SYS_tick_config(1);												// enable SYS_tick with interrupt
 	sys_init();															// write settings
 
-	config_GPIO(GPIOC, 13, GPIO_output, GPIO_pull_up, GPIO_open_drain);
+	//config_GPIO(GPIOC, 13, GPIO_output, GPIO_pull_up, GPIO_open_drain);
 	config_UART(USART1_TX_A9, USART1_RX_A10, 115200);
 	uint32_t ts = 1726653600;
+	config_RTC_ext_ts(1U, RTC_TS_POLARITY_FALLING);
 	uconfig_RTC(ts, RTC_WAKEUP_DISABLE, RTC_WAKEUP_DIV16, 0x0000U);
-	//config_RTC_ext_ts(1U, RTC_TS_POLARITY_FALLING);  // TODO: enable int
+	start_EXTI(21U);
 
 	while (1) {
 		GPIO_toggle(GPIOC, 13);
@@ -37,4 +39,5 @@ void main(void) {
 		//*((uint32_t*)&dr) = RTC->DR;
 		//(void)tr;
 	}
+	// DFSDM?
 }

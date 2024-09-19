@@ -103,11 +103,8 @@ void reset_RTC() {
 }
 
 void config_RTC_ext_ts(uint8_t int_enable, RTC_TS_pol_t pol) {
-	/* TODO To enable the RTC TimeStamp interrupt, the following sequence is required
-	 * 1. Configure and enable the EXTI Line 21 in interrupt mode and select the rising edge sensitivity.
-	 * 2. Configure and Enable the TAMP_STAMP IRQ channel in the NVIC.
-	 * 3. Configure the RTC to detect the RTC timestamp event.
-	 * */
+	config_EXTI(21U, 0U, 1U);
+	set_IRQ_priority(TAMP_STAMP_IRQn, 1);
 
 	PWR->CR |= 0x100UL;						// enable BDP
 	while (!(PWR->CR & 0x100UL));

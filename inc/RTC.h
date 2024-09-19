@@ -6,6 +6,7 @@
 #define STM32F412_RTC_H
 #include "periph.h"
 #include "sys.h"
+#include "EXTI.h"
 
 
 // types

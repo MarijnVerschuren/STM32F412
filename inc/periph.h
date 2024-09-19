@@ -23,6 +23,9 @@
 /*!< APB2 peripherals */
 #define USART1					((USART_t*)USART1_BASE)
 #define USART6					((USART_t*)USART6_BASE)
+#define SYSCFG					((SYSCFG_t*)SYSCFG_BASE)
+#define EXTI					((EXTI_t *)EXTI_BASE)
+
 
 /*!< AHB1 peripherals */
 #define GPIOA					((GPIO_t*)GPIOA_BASE)
@@ -63,19 +66,19 @@ typedef struct {  // TODO:
 } SCB_t;
 
 typedef struct {  // TODO
-	_IO uint32_t ISER[8U];               /*!< Offset: 0x000 (R/W)  Interrupt Set Enable Register */
-		uint32_t RESERVED0[24U];
-	_IO uint32_t ICER[8U];               /*!< Offset: 0x080 (R/W)  Interrupt Clear Enable Register */
-		uint32_t RESERVED1[24U];
-	_IO uint32_t ISPR[8U];               /*!< Offset: 0x100 (R/W)  Interrupt Set Pending Register */
-		uint32_t RESERVED2[24U];
-	_IO uint32_t ICPR[8U];               /*!< Offset: 0x180 (R/W)  Interrupt Clear Pending Register */
-		uint32_t RESERVED3[24U];
-	_IO uint32_t IABR[8U];               /*!< Offset: 0x200 (R/W)  Interrupt Active bit Register */
-		uint32_t RESERVED4[56U];
-	_IO uint8_t  IP[240U];               /*!< Offset: 0x300 (R/W)  Interrupt Priority Register (8Bit wide) */
-		uint32_t RESERVED5[644U];
-	_O	uint32_t STIR;                   /*!< Offset: 0xE00 ( /W)  Software Trigger Interrupt Register */
+	_IO uint32_t ISER[8U];			/* interrupt enable                 0x000 */
+		uint32_t _0[24U];
+	_IO uint32_t ICER[8U];			/* interrupt disable                0x080 */
+		uint32_t _1[24U];
+	_IO uint32_t ISPR[8U];			/* interrupt set pending            0x100 */
+		uint32_t _2[24U];
+	_IO uint32_t ICPR[8U];			/* interrupt clear pending			0x180 */
+		uint32_t _3[24U];
+	_IO uint32_t IABR[8U];			/* interrupt active bit             0x200 */
+		uint32_t _4[56U];
+	_IO uint8_t  IP[240U];			/* interrupt priority               0x300 */
+		uint32_t _5[644U];
+	_O	uint32_t STIR;				/* software trigger interrupt       0xE00 */
 } NVIC_t;
 
 typedef struct {
@@ -141,7 +144,16 @@ typedef struct {
 	_IO uint32_t	DCKCFGR1;		/* dedicated clocks configuration 1  0x94 */
 } RCC_t;
 
-/*!< SYSCFG TODO */
+/*!< SYSCFG */
+typedef struct {
+	_IO uint32_t MEMRMP;			/* memory remap                      0x00 */
+	_IO uint32_t PMC;				/* peripheral mode configuration     0x04 */
+	_IO uint32_t EXTICR[4];			/* external interrupt configuration  0x08-0x14 */
+		uint32_t _;
+	_IO uint32_t CFGR2;				/* configuration                     0x1C */
+	_IO uint32_t CMPCR;				/* compensation cell control         0x20 */
+	_IO uint32_t CFGR;				/* configuration                     0x24 */
+} SYSCFG_t;
 
 /*!< GPIO */
 typedef struct {
@@ -156,7 +168,15 @@ typedef struct {
 	_IO uint32_t	AFR[2];			/* alternate function           0x20-0x24 */
 } GPIO_t;
 
-/*!< EXTI TODO */
+/*!< EXTI */
+typedef struct {
+	_IO uint32_t IMR;				/* interrupt mask                    0x00 */
+	_IO uint32_t EMR;				/* event mask                        0x04 */
+	_IO uint32_t RTSR;				/* rising trigger selection          0x08 */
+	_IO uint32_t FTSR;				/* falling trigger selection         0x0C */
+	_IO uint32_t SWIER;				/* software interrupt event          0x10 */
+	_IO uint32_t PR;				/* pending                           0x14 */
+} EXTI_t;
 
 /*!< TIM TODO */
 

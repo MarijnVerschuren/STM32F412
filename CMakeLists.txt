@@ -62,6 +62,8 @@ add_executable(${PROJECT_NAME}
         src/usart.c
         src/usart.S
         src/RTC.c
+        src/EXTI.c
+        src/NVIC.c
 )
 
 target_link_libraries(${PROJECT_NAME}
