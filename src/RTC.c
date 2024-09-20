@@ -103,20 +103,22 @@ void reset_RTC() {
 }
 
 void config_RTC_ext_ts(uint8_t int_enable, RTC_TS_pol_t pol) {
-	config_EXTI(21U, 0U, 1U);
+	EXTI->RTSR |= (0b1u << 21U);
+	EXTI->EMR |= (0b1u << 21U);  // unmask event
 	set_IRQ_priority(TAMP_STAMP_IRQn, 1);
+	enable_IRQ(TAMP_STAMP_IRQn);
 
 	PWR->CR |= 0x100UL;						// enable BDP
 	while (!(PWR->CR & 0x100UL));
 	RTC->WPR = 0xCAUL;						// write key 0 into the write protect register
 	RTC->WPR = 0x53UL;						// write key 1 into the write protect register
 
+	RTC->TAFCR &= ~(0b1UL << 17U);			// C13 selected as ts pin
 	RTC->CR |= (
 		0x00000800UL			|			// enable timestamp
 		(int_enable << 15U)		|			// enable timestamp interrupt
 		(pol << 3U)
 	);
-	RTC->TAFCR &= ~(0b1UL << 17U);			// C13 selected as ts register
 
 	RTC->WPR = 0x0UL;						// re-enable write protection
 	PWR->CR &= ~0x100UL;					// disable BDP

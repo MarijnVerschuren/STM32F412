@@ -23,18 +23,22 @@ void main(void) {
 	set_SYS_tick_config(1);												// enable SYS_tick with interrupt
 	sys_init();															// write settings
 
+	volatile EXTI_t* exti = EXTI;
+	volatile NVIC_t* nvic = NVIC;
+	volatile RTC_t* rtc = RTC;
 	//config_GPIO(GPIOC, 13, GPIO_output, GPIO_pull_up, GPIO_open_drain);
 	config_UART(USART1_TX_A9, USART1_RX_A10, 115200);
-	uint32_t ts = 1726653600;
+	uint32_t ts = 1726832418;
 	config_RTC_ext_ts(1U, RTC_TS_POLARITY_FALLING);
 	uconfig_RTC(ts, RTC_WAKEUP_DISABLE, RTC_WAKEUP_DIV16, 0x0000U);
 	start_EXTI(21U);
 
 	while (1) {
-		GPIO_toggle(GPIOC, 13);
+		//GPIO_toggle(GPIOC, 13);
 		ts = RTC_unix();
 		USART_write(USART1, &ts, 4, 100);
 		delay_ms(500);
+		EXTI->SWIER ^= 0b1 << 21U;
 		//*((uint32_t*)&tr) = RTC->TR;
 		//*((uint32_t*)&dr) = RTC->DR;
 		//(void)tr;
