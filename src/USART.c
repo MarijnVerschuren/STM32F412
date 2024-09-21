@@ -1,7 +1,7 @@
 //
 // Created by marijn on 9/17/24.
 //
-#include "usart.h"
+#include "USART.h"
 
 
 /*!< irq vars */

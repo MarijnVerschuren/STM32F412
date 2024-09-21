@@ -5,7 +5,7 @@
 #ifndef STM32F412_USART_H
 #define STM32F412_USART_H
 #include "periph.h"
-#include "gpio.h"
+#include "GPIO.h"
 #include "sys.h"
 
 
@@ -23,15 +23,16 @@ typedef enum {
 typedef enum {
 	USART_OVERSAMPLING_16 =	0,
 	USART_OVERSAMPLING_8 =	1,
-} USART_oversampling_t;
+} USART_OS_t;
 
 
 // TODO: ASM!!
 /*!< init / enable / disable */
 void enable_USART(USART_t* usart);
 void disable_USART(USART_t* usart);
+void reset_USART(USART_t* usart);
 // UART mode TODO: improve fconfig asm
-void fconfig_UART(USART_GPIO_t tx, USART_GPIO_t rx, uint32_t baud, USART_oversampling_t oversampling);
+void fconfig_UART(USART_GPIO_t tx, USART_GPIO_t rx, uint32_t baud, USART_OS_t oversampling);
 void config_UART(USART_GPIO_t tx, USART_GPIO_t rx, uint32_t baud);
 // TODO: irq!
 /*!< input / output */

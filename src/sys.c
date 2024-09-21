@@ -209,7 +209,7 @@ void sys_init(void) {
 	PWR->CR |= 0x100UL;  // disable backup domain write protection
 	while (!(PWR->CR & 0x100UL));
 	PWR->CSR |= (sys_config.BKUP_regulator_enable << 9U);
-	while (((PWR->CSR >> 9U) & 0b1U) != sys_config.BKUP_regulator_enable);
+	while (((PWR->CSR >> 9U) & 0b1U) < sys_config.BKUP_regulator_enable);
 	// LS clock settings
 	RCC->BDCR = (
 		(sys_config.LSE_enable << 0U)				|

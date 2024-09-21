@@ -4,7 +4,7 @@
 
 #ifndef STM32F412_EXTI_H
 #define STM32F412_EXTI_H
-#include "gpio.h"
+#include "GPIO.h"
 #include "NVIC.h"
 
 

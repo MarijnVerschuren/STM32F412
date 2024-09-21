@@ -45,6 +45,7 @@ add_compile_options(
 
 include_directories(
         "inc/"
+        "test/"
 )
 
 link_directories(
@@ -58,12 +59,14 @@ add_executable(${PROJECT_NAME}
         src/sys.S
         src/main.c
         src/sys.c
-        src/gpio.S
-        src/usart.c
-        src/usart.S
+        src/GPIO.S
+        src/USART.c
+        src/USART.S
         src/RTC.c
         src/EXTI.c
         src/NVIC.c
+
+        test/test.S
 )
 
 target_link_libraries(${PROJECT_NAME}
