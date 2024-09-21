@@ -69,7 +69,7 @@ void fconfig_RTC(
 		((time.sec % 10U) << 0U)			// set sec units
 	);
 
-	RTC->CR =  (
+	RTC->CR = (
 			0x00000020UL					|	// enable shadow register bypass
 			((wakeup & 0b1U) << 10U)		|	// set wake-up enable setting
 			(((wakeup >> 1) & 0b1U) << 14U)	|	// set wake-up interrupt setting
@@ -103,25 +103,28 @@ void reset_RTC() {
 }
 
 void config_RTC_ext_ts(uint8_t int_enable, RTC_TS_pol_t pol) {
-	EXTI->RTSR |= (0b1u << 21U);
-	EXTI->EMR |= (0b1u << 21U);  // unmask event
-	set_IRQ_priority(TAMP_STAMP_IRQn, 1);
-	enable_IRQ(TAMP_STAMP_IRQn);
-
 	PWR->CR |= 0x100UL;						// enable BDP
 	while (!(PWR->CR & 0x100UL));
 	RTC->WPR = 0xCAUL;						// write key 0 into the write protect register
 	RTC->WPR = 0x53UL;						// write key 1 into the write protect register
 
 	RTC->TAFCR &= ~(0b1UL << 17U);			// C13 selected as ts pin
+	RTC->CR |= (pol << 3U);
+
+	RTC->ISR &= ~0x00001800UL;				// clear TSF and TSOVF
 	RTC->CR |= (
 		0x00000800UL			|			// enable timestamp
-		(int_enable << 15U)		|			// enable timestamp interrupt
-		(pol << 3U)
+		(int_enable << 15U)					// enable timestamp interrupt
 	);
 
 	RTC->WPR = 0x0UL;						// re-enable write protection
 	PWR->CR &= ~0x100UL;					// disable BDP
+
+	EXTI->RTSR |= (0b1u << 21U);
+	EXTI->EMR |= (0b1u << 21U);  // unmask event
+	EXTI->IMR |= (0b1u << 21U);  // unmask interrupt
+	set_IRQ_priority(TAMP_STAMP_IRQn, 0);
+	enable_IRQ(TAMP_STAMP_IRQn);
 }
 
 // misc
