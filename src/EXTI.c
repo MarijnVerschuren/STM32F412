@@ -20,13 +20,6 @@ static inline uint32_t EXTI_line_to_IRQn(uint8_t EXTI_line) {
 }
 
 
-/*!< enable / disable */
-void config_EXTI(uint8_t EXTI_line, uint8_t falling_edge, uint8_t rising_edge) {
-	EXTI->FTSR |= ((falling_edge & 0b1u) << EXTI_line);
-	EXTI->RTSR |= ((rising_edge & 0b1u) << EXTI_line);
-	EXTI->IMR |= (0b1u << EXTI_line);  // unmask interrupt
-}
-
 void config_GPIO_EXTI(uint8_t EXTI_line, GPIO_t* EXTI_port, uint8_t falling_edge, uint8_t rising_edge) {
 	RCC->APB2ENR |= 0x00004000;  // enable SYSCFG
 	uint8_t pos = (EXTI_line & 0x3u);  // index in the register [0:3]

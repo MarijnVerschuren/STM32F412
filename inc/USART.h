@@ -26,15 +26,15 @@ typedef enum {
 } USART_OS_t;
 
 
-// TODO: ASM!!
 /*!< init / enable / disable */
 void enable_USART(USART_t* usart);
 void disable_USART(USART_t* usart);
 void reset_USART(USART_t* usart);
-// UART mode TODO: improve fconfig asm
+// UART mode
 void fconfig_UART(USART_GPIO_t tx, USART_GPIO_t rx, uint32_t baud, USART_OS_t oversampling);
 void config_UART(USART_GPIO_t tx, USART_GPIO_t rx, uint32_t baud);
-// TODO: irq!
+// IRQ
+// TODO
 /*!< input / output */
 uint32_t USART_write(USART_t* usart, const uint8_t* buffer, uint32_t size, uint32_t timeout);
 uint32_t USART_read(USART_t* usart, uint8_t* buffer, uint32_t size, uint32_t timeout);

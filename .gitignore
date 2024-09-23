@@ -1,5 +1,4 @@
-cmake-build-debug/
-cmake-build-release/
 .idea/
 build_debug/
 build_release/
+build_space_optimized/

@@ -55,27 +55,3 @@ extern void USART6_IRQHandler(void) { USART_irq_handler(USART6, &usart_buf_6); }
 //	NVIC->ICER[((irqn) >> 5UL)] = (uint32_t)(1UL << ((irqn) & 0x1FUL));  // NVIC_DisableIRQ
 //	__DSB(); __ISB();  // flush processor pipeline before fetching
 //}
-
-/*!< input / output */
-uint32_t USART_write(USART_t* usart, const uint8_t* buffer, uint32_t size, uint32_t timeout) {
-	uint64_t start = tick;
-	for (uint32_t i = 0; i < size; i++) {
-		while (!(usart->SR & 0x80UL)) { if ( tick - start > timeout) { return i; } }
-		usart->DR = buffer[i];
-	} return size;
-}
-uint32_t USART_read(USART_t* usart, uint8_t* buffer, uint32_t size, uint32_t timeout) {
-	uint64_t start = tick;
-	for (uint32_t i = 0; i < size; i++) {
-		while (!(usart->SR & 0x20UL)) { if ( tick - start > timeout) { return i; } }
-		buffer[i] = usart->DR;
-	} return size;
-}
-uint8_t USART_print(USART_t* usart, char* str, uint32_t timeout) {
-	uint64_t start = tick;
-	while (*str) {
-		while (!(usart->SR & 0x80UL)) { if (tick - start > timeout) { return -1; } }
-		usart->DR = *str++;
-	}
-	return 0;
-}

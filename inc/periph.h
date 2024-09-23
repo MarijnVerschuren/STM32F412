@@ -41,7 +41,30 @@
 /*!<
  * core peripheral types
  * */
-typedef struct {  // TODO:
+typedef struct {
+	_IO uint32_t	CTRL;			/* control and status                0x00 */
+	_IO uint32_t	LOAD;			/* reload value                      0x04 */
+	_IO uint32_t	VAL;			/* current value                     0x08 */
+	_I  uint32_t	CALIB;			/* calibration                       0x0C */
+} SYS_TICK_t;
+
+typedef struct {
+	_IO uint32_t ISER[8U];			/* interrupt enable                 0x000 */
+	uint32_t _0[24U];
+	_IO uint32_t ICER[8U];			/* interrupt disable                0x080 */
+	uint32_t _1[24U];
+	_IO uint32_t ISPR[8U];			/* interrupt set pending            0x100 */
+	uint32_t _2[24U];
+	_IO uint32_t ICPR[8U];			/* interrupt clear pending			0x180 */
+	uint32_t _3[24U];
+	_IO uint32_t IABR[8U];			/* interrupt active bit             0x200 */
+	uint32_t _4[56U];
+	_IO uint8_t  IP[240U];			/* interrupt priority               0x300 */
+	uint32_t _5[644U];
+	_O	uint32_t STIR;				/* software trigger interrupt       0xE00 */
+} NVIC_t;
+
+typedef struct {
 	_I  uint32_t	CPUID;			/* CPUID base                        0x00 */
 	_IO uint32_t	ICSR;			/* interrupt control and state       0x04 */
 	_IO uint32_t	VTOR;			/* vector table offset               0x08 */
@@ -64,29 +87,6 @@ typedef struct {  // TODO:
 	uint32_t		_0[5U];			/*                              0x74-0x84 */
 	_IO uint32_t	CPACR;			/* coprocessor access control        0x88 */
 } SCB_t;
-
-typedef struct {  // TODO
-	_IO uint32_t ISER[8U];			/* interrupt enable                 0x000 */
-		uint32_t _0[24U];
-	_IO uint32_t ICER[8U];			/* interrupt disable                0x080 */
-		uint32_t _1[24U];
-	_IO uint32_t ISPR[8U];			/* interrupt set pending            0x100 */
-		uint32_t _2[24U];
-	_IO uint32_t ICPR[8U];			/* interrupt clear pending			0x180 */
-		uint32_t _3[24U];
-	_IO uint32_t IABR[8U];			/* interrupt active bit             0x200 */
-		uint32_t _4[56U];
-	_IO uint8_t  IP[240U];			/* interrupt priority               0x300 */
-		uint32_t _5[644U];
-	_O	uint32_t STIR;				/* software trigger interrupt       0xE00 */
-} NVIC_t;
-
-typedef struct {
-	_IO uint32_t	CTRL;			/* control and status                0x00 */
-	_IO uint32_t	LOAD;			/* reload value                      0x04 */
-	_IO uint32_t	VAL;			/* current value                     0x08 */
-	_I  uint32_t	CALIB;			/* calibration                       0x0C */
-} SYS_TICK_t;
 
 
 /*!<
@@ -180,7 +180,7 @@ typedef struct {
 
 /*!< TIM TODO */
 
-/*!< RTC TODO */
+/*!< RTC */
 typedef struct {
 	_IO uint32_t	TR;				/*!< time                            0x00 */
 	_IO uint32_t	DR;				/*!< date                            0x04 */

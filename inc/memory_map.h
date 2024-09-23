@@ -154,6 +154,16 @@
 /*!<
  * core peripheral register maps
  * */
+/*!< SYS TICK TODO */
+/*!< NVIC TODO */
+#define NVIC_ISER		0x000
+#define NVIC_ICER		0x080
+#define NVIC_ISPR		0x100
+#define NVIC_ICPR		0x180
+#define NVIC_IABR		0x200
+#define NVIC_IP			0x300
+#define NVIC_STIR		0xE00
+
 /*!< SCB */
 #define SCB_CPUID		0x00U
 #define SCB_ICSR		0x04U
@@ -231,7 +241,13 @@
 #define GPIO_LCKR		0x1CU
 #define GPIO_AFR		0x20U
 
-/*!< EXTI TODO */
+/*!< EXTI */
+#define EXTI_IMR		0x00
+#define EXTI_EMR		0x04
+#define EXTI_RTSR		0x08
+#define EXTI_FTSR		0x0C
+#define EXTI_SWIER		0x10
+#define EXTI_PR			0x14
 
 /*!< TIM TODO */
 

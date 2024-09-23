@@ -15,6 +15,7 @@ set(CPU_OPTIONS -mthumb -mcpu=cortex-m4)
 # optimizations (-O0 -O1 -O2 -O3 -Os -Ofast -Og -flto)
 set(CMAKE_C_FLAGS_DEBUG "-O0 -g -DDEBUG")
 set(CMAKE_C_FLAGS_RELEASE "-Ofast -flto")
+set(CMAKE_C_FLAGS_MINSIZEREL "-Os -flto")
 
 add_compile_options(
         ${CPU_OPTIONS}
@@ -57,16 +58,18 @@ add_executable(${PROJECT_NAME}
         src/vector.S
         src/startup.S
         src/sys.S
+        src/NVIC.S
+        src/GPIO.S
+        src/USART.S
+
         src/main.c
         src/sys.c
-        src/GPIO.S
         src/USART.c
-        src/USART.S
         src/RTC.c
         src/EXTI.c
-        src/NVIC.c
 
         test/test.S
+        src/EXTI.S
 )
 
 target_link_libraries(${PROJECT_NAME}

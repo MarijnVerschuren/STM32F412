@@ -30,6 +30,7 @@ IVT:
 .word 0				// RTC_WKUP_IRQn
 .word 0				// FLASH_IRQn
 .word 0				// RCC_IRQn
+.size IVT, .-IVT
 
 
 // default handler

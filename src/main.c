@@ -8,6 +8,8 @@
 #include "test.h"
 
 
+const char* msg = "Hello World!";
+
 void RTC_tamper_stamp_handler(void) {
 	EXTI->PR |= 0x00200000UL;
 	uint32_t ts = RTC_unix();
@@ -28,20 +30,23 @@ void main(void) {
 	set_SYS_tick_config(1);												// enable SYS_tick with interrupt
 	sys_init();															// write settings
 
-	config_GPIO(GPIOA, 8, GPIO_output | GPIO_pull_up | GPIO_open_drain);
-	//config_UART(USART1_TX_A9, USART1_RX_A10, 115200);
+	config_GPIO(GPIOA, 8, GPIO_output | GPIO_no_pull | GPIO_push_pull);
+	config_UART(USART1_TX_A9, USART1_RX_A10, 115200);
 	//uint32_t ts = 1726832418;
 	//uconfig_RTC(ts, RTC_WAKEUP_DISABLE, RTC_WAKEUP_DIV16, 0x0000U);
 	//config_RTC_ext_ts(1U, RTC_TS_POLARITY_RISING);
 
-
+	uint32_t t = 0x12345678;
 	while (1) {
 		GPIO_toggle(GPIOA, 8);
-		delay_ms(20);
+		//delay_ms(100);
+		USART_write(USART1, &t, 4, 100);
+		USART_print(USART1, msg, 100);
 
 		//*((uint32_t*)&tr) = RTC->TR;
 		//*((uint32_t*)&dr) = RTC->DR;
 		//(void)tr;
 	}
+	// TODO: reset RTC in sysinit
 	// DFSDM?
 }
