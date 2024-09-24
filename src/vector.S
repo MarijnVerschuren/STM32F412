@@ -26,14 +26,18 @@ IVT:
 // TODO: more interrupts
 .word 0				// WWDG_IRQn
 .word 0				// PVD_IRQn
-.word RTC_tamper_stamp_handler
+.word RTC_stamp_handler
 .word 0				// RTC_WKUP_IRQn
 .word 0				// FLASH_IRQn
 .word 0				// RCC_IRQn
+.word EXTI0_handler
 .size IVT, .-IVT
 
 
-// default handler
+
+/*!<
+ * functions
+ * */
 .section .text.default_handler, "ax", %progbits
 default_handler:
 	bkpt #1
@@ -41,7 +45,18 @@ default_handler:
 .size default_handler, .-default_handler
 
 
-// weak definitions
+
+/*!<
+ * aliases
+ * */
+.weak RTC_stamp_handler
+.thumb_set RTC_stamp_handler,	RTC_tamper_handler
+
+
+
+/*!<
+ * weak definitions
+ * */
 .weak NMI_handler
 .thumb_set NMI_handler,			default_handler
 .weak hard_fault_handler
@@ -60,4 +75,10 @@ default_handler:
 .thumb_set pending_SV_handler,	default_handler
 .weak sys_tick_handler
 .thumb_set sys_tick_handler,	default_handler
+
+.weak RTC_tamper_handler		// RTC_stamp_hander
+.thumb_set RTC_tamper_handler,	default_handler
+.weak EXTI0_handler
+.thumb_set EXTI0_handler,		default_handler
+
 

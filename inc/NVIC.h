@@ -25,7 +25,8 @@ typedef enum {
 	/*!<	[STM32 interrupts]				*/
 	WWDG_IRQn                   = 0,      /*!< Window WatchDog Interrupt                                         */
 	PVD_IRQn                    = 1,      /*!< PVD through EXTI Line detection Interrupt                         */
-	TAMP_STAMP_IRQn             = 2,      /*!< Tamper and TimeStamp interrupts through the EXTI line             */
+	RTC_STAMP_IRQn              = 2,      /*!< TimeStamp interrupt through the EXTI line             */
+	RTC_TAMPER_IRQn             = 2,      /*!< Tamper interrupt through the EXTI line             */
 	RTC_WKUP_IRQn               = 3,      /*!< RTC Wakeup interrupt through the EXTI line                        */
 	FLASH_IRQn                  = 4,      /*!< FLASH global Interrupt                                            */
 	RCC_IRQn                    = 5,      /*!< RCC global Interrupt                                              */
@@ -64,7 +65,7 @@ typedef enum {
 	USART2_IRQn                 = 38,     /*!< USART2 global Interrupt                                           */
 	USART3_IRQn                 = 39,     /*!< USART3 global Interrupt                                           */
 	EXTI15_10_IRQn              = 40,     /*!< External Line[15:10] Interrupts                                   */
-	RTC_Alarm_IRQn              = 41,     /*!< RTC Alarm (A and B) through EXTI Line Interrupt                   */
+	RTC_ALARM_IRQn              = 41,     /*!< RTC Alarm (A and B) through EXTI Line Interrupt                   */
 	OTG_FS_WKUP_IRQn            = 42,     /*!< USB OTG FS Wakeup through EXTI line interrupt                     */
 	TIM8_BRK_TIM12_IRQn         = 43,     /*!< TIM8 Break Interrupt and TIM12 global interrupt                   */
 	TIM8_UP_TIM13_IRQn          = 44,     /*!< TIM8 Update Interrupt and TIM13 global interrupt                  */

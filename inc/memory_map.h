@@ -228,7 +228,13 @@
 #define RCC_CKGATENR	0x90U
 #define RCC_DCKCFGR1	0x94U
 
-/*!< SYSCFG TODO */
+/*!< SYSCFG */
+#define SYSCFG_MEMRMP	0x00U
+#define SYSCFG_PMC		0x04U
+#define SYSCFG_EXTICR	0x08U
+#define SYSCFG_CFGR2	0x1CU
+#define SYSCFG_CMPCR	0x20U
+#define SYSCFG_CFGR		0x24U
 
 /*!< GPIO */
 #define GPIO_MODER		0x00U
@@ -242,12 +248,12 @@
 #define GPIO_AFR		0x20U
 
 /*!< EXTI */
-#define EXTI_IMR		0x00
-#define EXTI_EMR		0x04
-#define EXTI_RTSR		0x08
-#define EXTI_FTSR		0x0C
-#define EXTI_SWIER		0x10
-#define EXTI_PR			0x14
+#define EXTI_IMR		0x00U
+#define EXTI_EMR		0x04U
+#define EXTI_RTSR		0x08U
+#define EXTI_FTSR		0x0CU
+#define EXTI_SWIER		0x10U
+#define EXTI_PR			0x14U
 
 /*!< TIM TODO */
 

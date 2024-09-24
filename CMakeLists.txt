@@ -47,6 +47,7 @@ add_compile_options(
 include_directories(
         "inc/"
         "test/"
+        "lib/"
 )
 
 link_directories(
@@ -60,16 +61,19 @@ add_executable(${PROJECT_NAME}
         src/sys.S
         src/NVIC.S
         src/GPIO.S
+        src/EXTI.S
         src/USART.S
 
         src/main.c
         src/sys.c
         src/USART.c
         src/RTC.c
-        src/EXTI.c
+        src/I2C.c
+        src/tim.c
 
         test/test.S
-        src/EXTI.S
+
+        lib/AS5600/AS5600.c
 )
 
 target_link_libraries(${PROJECT_NAME}
