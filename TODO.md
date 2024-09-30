@@ -1,5 +1,4 @@
 ># ADD
->* TIM
 >* ADC
 >* SPI
 >* MCO

@@ -110,7 +110,7 @@ config_EXTI_GPIO:
 start_EXTI:
 	mov r3, lr
 	bl EXTI_to_IRQn
-	bl enable_IRQ
+	bl NVIC_enable_IRQ
 	bx r3
 .size start_EXTI, .-start_EXTI
 
@@ -121,7 +121,7 @@ start_EXTI:
 stop_EXTI:
 	mov r3, lr
 	bl EXTI_to_IRQn
-	bl disable_IRQ
+	bl NVIC_disable_IRQ
 	bx r3
 .size stop_EXTI, .-stop_EXTI
 

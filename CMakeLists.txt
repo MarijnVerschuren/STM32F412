@@ -74,6 +74,8 @@ add_executable(${PROJECT_NAME}
         test/test.S
 
         lib/AS5600/AS5600.c
+        src/ADC.c
+        src/SPI.c
 )
 
 target_link_libraries(${PROJECT_NAME}

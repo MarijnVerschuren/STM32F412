@@ -107,9 +107,9 @@ typedef enum {
 /*!<
  * init
  * */
-void enable_IRQ(IRQn_t irqn);
-void disable_IRQ(IRQn_t irqn);
-void set_IRQ_priority(IRQn_t irqn, uint8_t priority);
+void NVIC_enable_IRQ(IRQn_t irqn);
+void NVIC_disable_IRQ(IRQn_t irqn);
+void NVIC_set_IRQ_priority(IRQn_t irqn, uint8_t priority);
 
 
 #endif //STM32F412_NVIC_H

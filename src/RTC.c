@@ -123,8 +123,8 @@ void config_RTC_ext_ts(uint8_t int_enable, RTC_TS_pol_t pol) {
 	EXTI->RTSR |= (0b1u << 21U);
 	EXTI->EMR |= (0b1u << 21U);  // unmask event
 	EXTI->IMR |= (0b1u << 21U);  // unmask interrupt
-	set_IRQ_priority(RTC_STAMP_IRQn, 0);
-	enable_IRQ(RTC_STAMP_IRQn);
+	NVIC_set_IRQ_priority(RTC_STAMP_IRQn, 0);
+	NVIC_enable_IRQ(RTC_STAMP_IRQn);
 }
 
 // misc

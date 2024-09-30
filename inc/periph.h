@@ -15,6 +15,15 @@
 
 
 /*!< APB1 peripherals */
+#define TIM2					((TIM_t*)TIM2_BASE)
+#define TIM3					((TIM_t*)TIM3_BASE)
+#define TIM4					((TIM_t*)TIM4_BASE)
+#define TIM5					((TIM_t*)TIM5_BASE)
+#define TIM6					((TIM_t*)TIM6_BASE)
+#define TIM7					((TIM_t*)TIM7_BASE)
+#define TIM12					((TIM_t*)TIM12_BASE)
+#define TIM13					((TIM_t*)TIM13_BASE)
+#define TIM14					((TIM_t*)TIM14_BASE)
 #define RTC						((RTC_t*)RTC_BASE)
 #define USART2					((USART_t*)USART2_BASE)
 #define USART3					((USART_t*)USART3_BASE)
@@ -25,10 +34,17 @@
 
 
 /*!< APB2 peripherals */
+#define TIM1					((TIM_t*)TIM1_BASE)
+#define TIM8					((TIM_t*)TIM8_BASE)
 #define USART1					((USART_t*)USART1_BASE)
 #define USART6					((USART_t*)USART6_BASE)
+#define ADC1					((ADC_t*)ADC1_BASE)
+#define ADC_COMMON				((ADC_COMMON_t*)ADC_COMMON_BASE)
 #define SYSCFG					((SYSCFG_t*)SYSCFG_BASE)
 #define EXTI					((EXTI_t *)EXTI_BASE)
+#define TIM9					((TIM_t*)TIM9_BASE)
+#define TIM10					((TIM_t*)TIM10_BASE)
+#define TIM11					((TIM_t*)TIM11_BASE)
 
 
 /*!< AHB1 peripherals */
@@ -182,7 +198,30 @@ typedef struct {
 	_IO uint32_t PR;				/* pending                           0x14 */
 } EXTI_t;
 
-/*!< TIM TODO */
+/*!< TIM */
+typedef struct {
+	_IO uint32_t CR1;				/* control 1                         0x00 */
+	_IO uint32_t CR2;				/* control 2                         0x04 */
+	_IO uint32_t SMCR;				/* slave mode control                0x08 */
+	_IO uint32_t DIER;				/* DMA/interrupt enable              0x0C */
+	_IO uint32_t SR;				/* status                            0x10 */
+	_IO uint32_t EGR;				/* event generation                  0x14 */
+	_IO uint32_t CCMR1;				/* capture/compare mode 1            0x18 */
+	_IO uint32_t CCMR2;				/* capture/compare mode 2            0x1C */
+	_IO uint32_t CCER;				/* capture/compare enable            0x20 */
+	_IO uint32_t CNT;				/* counter                           0x24 */
+	_IO uint32_t PSC;				/* prescaler,                        0x28 */
+	_IO uint32_t ARR;				/* auto-reload                       0x2C */
+	_IO uint32_t RCR;				/* repetition counter                0x30 */
+	_IO uint32_t CCR1;				/* capture/compare 1                 0x34 */
+	_IO uint32_t CCR2;				/* capture/compare 2                 0x38 */
+	_IO uint32_t CCR3;				/* capture/compare 3                 0x3C */
+	_IO uint32_t CCR4;				/* capture/compare 4                 0x40 */
+	_IO uint32_t BDTR;				/* break and dead-time               0x44 */
+	_IO uint32_t DCR;				/* DMA control                       0x48 */
+	_IO uint32_t DMAR;				/* DMA address for full transfer     0x4C */
+	_IO uint32_t OR;				/* option                            0x50 */
+} TIM_t;
 
 /*!< RTC */
 typedef struct {
@@ -226,7 +265,35 @@ typedef struct {
 
 /*!< RNG TODO */
 
-/*!< ADC TODO */
+/*!< ADC */
+typedef struct {
+	_IO uint32_t SR;				/* status                            0x00 */
+	_IO uint32_t CR1;				/* control 1                         0x04 */
+	_IO uint32_t CR2;				/* control 2                         0x08 */
+	_IO uint32_t SMPR1;				/* sample time 1                     0x0C */
+	_IO uint32_t SMPR2;				/* sample time 2                     0x10 */
+	_IO uint32_t JOFR1;				/* injected channel data offset 1    0x14 */
+	_IO uint32_t JOFR2;				/* injected channel data offset 2    0x18 */
+	_IO uint32_t JOFR3;				/* injected channel data offset 3    0x1C */
+	_IO uint32_t JOFR4;				/* injected channel data offset 4    0x20 */
+	_IO uint32_t HTR;				/* watchdog higher threshold         0x24 */
+	_IO uint32_t LTR;				/* watchdog lower threshold          0x28 */
+	_IO uint32_t SQR1;				/* regular sequence 1                0x2C */
+	_IO uint32_t SQR2;				/* regular sequence 2                0x30 */
+	_IO uint32_t SQR3;				/* regular sequence 3                0x34 */
+	_IO uint32_t JSQR;				/* injected sequence                 0x38 */
+	_IO uint32_t JDR1;				/* injected data 1                   0x3C */
+	_IO uint32_t JDR2;				/* injected data 2                   0x40 */
+	_IO uint32_t JDR3;				/* injected data 3                   0x44 */
+	_IO uint32_t JDR4;				/* injected data 4                   0x48 */
+	_IO uint32_t DR;				/* regular data                      0x4C */
+} ADC_t;
+
+typedef struct {
+	_IO uint32_t CSR;				/* status                    ADC1 + 0x300 */
+	_IO uint32_t CCR;				/* control                   ADC1 + 0x304 */
+	_IO uint32_t CDR;				/* dual / triple mode data   ADC1 + 0x308 */
+} ADC_COMMON_t;
 
 /*!< I2C */
 typedef struct {
