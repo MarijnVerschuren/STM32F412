@@ -6,34 +6,34 @@
 
 
 
-void config_ADC(uint16_t flags) {
-	RCC->APB2ENR |=		0x00000100UL;	// enable ADC1 clk
-	ADC1->CR2 =			0x00000001UL;	// power up ADC1
+void config_ADC(uint64_t flags) {
+	RCC->APB2ENR |=		0x00000100UL;			// enable ADC1 clk
+	ADC1->CR2 =			0x00000001UL;			// power up ADC1
 	ADC_COMMON->CCR =	(flags & 0xFFU) << 16;	// clock div, feature enable
-	ADC1->CR1 =			(flags & 0xF00U) << 8;	// resolution
+	ADC1->CR1 =			(flags & 0xFFFFFF00U);	// resolution, mode
+	ADC1->CR2 |=		(flags >> 32);			// EOC, align
 }
-
-void config_injected_ADC_GPIO(GPIO_t* port, uint8_t pin, uint8_t EOC_int, uint8_t DISC, uint8_t res, uint8_t CONT, uint8_t align, uint8_t trig, uint8_t trig_mode) {
-	config_GPIO(port, pin, GPIO_analog | GPIO_no_pull);
-	ADC1->CR1 = (
-		(EOC_int << 7)	|
-		(DISC << 12)	|
-		(res << 24)
-	);	// TODO: watchdog, overrun
-	ADC1->CR2 = (
-		(0b1 << 0)			|	// ADON
-		(CONT << 1)			|	// continuous mode
-		(align << 11)		|	// align data
-		(trig << 16)		|	// external trigger
-		(trig_mode << 20)		// trigger mode
-	);
-	// TODO
+void config_ADC_watchdog(uint32_t flags, uint16_t high_threshold, uint16_t low_threshold) {
+	ADC1->CR1 |= flags;
+	ADC1->HTR = high_threshold;
+	ADC1->LTR = low_threshold;
 }
-
-void config_ADC_watchdog(uint32_t flags) { ADC1->CR1 |= flags; }
-void config_ADC_IRQ(uint8_t priority) {
+void config_ADC_IRQ(uint8_t priority, uint32_t flags) {
+	ADC1->CR1 = (ADC1->CR1 & ~0x000000E0) | flags;
 	NVIC_set_IRQ_priority(ADC_IRQn, priority);
 	NVIC_enable_IRQ(ADC_IRQn);
 }
 
+void config_ADC_GPIO_channel(GPIO_t* port, uint8_t pin, ADC_SAMPLE_TIME_t sample_time) {
+	config_GPIO(port, pin, GPIO_analog | GPIO_no_pull);
+
+	// TODO
+}
+
+void start_ADC(uint8_t regular, uint8_t injected) {
+	ADC1->CR2 |= (
+		(regular << 30)	|
+		(injected << 22)
+	);
+}
 
