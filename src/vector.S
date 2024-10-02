@@ -31,6 +31,24 @@ IVT:
 .word 0				// FLASH_IRQn
 .word 0				// RCC_IRQn
 .word EXTI0_handler
+.word EXTI1_handler
+.word EXTI2_handler
+.word EXTI3_handler
+.word EXTI4_handler
+.word 0				// DMA1_stream0_IRQn
+.word 0				// DMA1_stream1_IRQn
+.word 0				// DMA1_stream2_IRQn
+.word 0				// DMA1_stream3_IRQn
+.word 0				// DMA1_stream4_IRQn
+.word 0				// DMA1_stream5_IRQn
+.word 0				// DMA1_stream6_IRQn
+.word ADC_handler
+.word 0				// CAN1_TX_IRQn
+.word 0				// CAN1_RX0_IRQn
+.word 0				// CAN1_RX1_IRQn
+.word 0				// CAN1_SCE_IRQn
+.word EXTI5_9_handler
+
 .size IVT, .-IVT
 
 
@@ -80,5 +98,16 @@ default_handler:
 .thumb_set RTC_tamper_handler,	default_handler
 .weak EXTI0_handler
 .thumb_set EXTI0_handler,		default_handler
-
+.weak EXTI1_handler
+.thumb_set EXTI1_handler,		default_handler
+.weak EXTI2_handler
+.thumb_set EXTI2_handler,		default_handler
+.weak EXTI3_handler
+.thumb_set EXTI3_handler,		default_handler
+.weak EXTI4_handler
+.thumb_set EXTI4_handler,		default_handler
+.weak EXTI5_9_handler
+.thumb_set EXTI5_9_handler,		default_handler
+.weak ADC_handler
+.thumb_set ADC_handler,			default_handler
 

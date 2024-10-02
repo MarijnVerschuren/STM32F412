@@ -5,6 +5,7 @@
 #include "USART.h"
 #include "RTC.h"
 #include "I2C.h"
+#include "ADC.h"
 
 #include "AS5600/AS5600.h"
 
@@ -20,9 +21,27 @@ void RTC_stamp_handler(void) {
 	return;
 }
 
-void EXTI0_handler(void) {
+void EXTI5_9_handler(void) {
 	EXTI->PR = 0x00000001UL;
 	return;
+}
+
+void ADC_handler(void) {
+	uint8_t status = ADC1->SR;
+	ADC1->SR = ~status;
+	if (status & 0b000001) {
+		return;  // watchdog
+	} if (status & 0b000010) {
+		return;  // EOC
+	} if (status & 0b000100) {
+		uint32_t angle = ADC1->JDR1;
+		uint32_t anglei2c = AS5600_get_angle(I2C2, 10);
+		uint32_t angle_adj = angle + (angle / 4);
+		(void)angle_adj; (void)anglei2c;	// max 8 units off!!!!
+		return;  // JEOC
+	} if (status & 0b10000) {
+		return;  // OVR
+	}
 }
 
 
@@ -33,11 +52,15 @@ void AS5600_app(void) {
 	)) { delay_ms(100); }
 	volatile uint8_t stat = AS5600_get_status(I2C2, 10);
 
+	start_ADC(0, 1);
+
 	volatile uint16_t angle;
 	for (;;) {
-		delay_ms(500);
-		angle = AS5600_get_angle(I2C2, 10);
-		(void)stat; (void)angle;
+		delay_ms(10);
+		ADC1->CR2 |= (1 << 22);
+		//delay_ms(500);
+		//angle = AS5600_get_angle(I2C2, 10);
+		//(void)stat; (void)angle;
 	}
 }
 
@@ -54,10 +77,21 @@ void main(void) {
 	set_SYS_tick_config(1);												// enable SYS_tick with interrupt
 	sys_init();															// write settings
 
+	// GPIO
 	config_GPIO(GPIOA, 8, GPIO_output | GPIO_no_pull | GPIO_push_pull);
 	config_GPIO(GPIOA, 0, GPIO_input | GPIO_pull_up | GPIO_open_drain);
-	config_EXTI_GPIO(GPIOA, 0, 0, 1);  NVIC_set_IRQ_priority(EXTI0_IRQn, 0);
-	start_EXTI(0);
+
+	// EXTI
+	//config_EXTI_GPIO(GPIOA, 0, 0, 1);
+	//NVIC_set_IRQ_priority(EXTI0_IRQn, 0);
+	//start_EXTI(0);
+
+	// ADC	TODO: redo flags
+	config_ADC(ADC_CLK_DIV2 | ADC_INJ_DISC_ENABLE | ADC_RES_12B | ADC_EOC_SINGLE | ADC_INJ_TRIG_TIM1_TRGO | ADC_INJ_TRIG_MODE_RISING);
+	//config_ADC_watchdog(ADC_WDG_CH0 | ADC_WDG_SCAN_SINGLE | ADC_WDG_TYPE_INJECTED, 200, 3900);
+	config_ADC_IRQ(1, ADC_IRQ_ENABLE_JEOC);// | ADC_IRQ_ENABLE_WDG);
+	config_ADC_GPIO_inj_channel(GPIOA, 0, ADC_SAMPLE_28_CYCLES, 409, 0);
+
 
 	config_UART(USART1_TX_A9, USART1_RX_A10, 115200);
 	config_I2C(I2C2_B10_SCL, I2C2_B9_SDA, 0x00);
