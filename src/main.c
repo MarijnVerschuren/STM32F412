@@ -88,10 +88,14 @@ void main(void) {
 
 	// ADC	TODO: redo flags
 	config_ADC(ADC_CLK_DIV2 | ADC_INJ_DISC_ENABLE | ADC_RES_12B | ADC_EOC_SINGLE | ADC_INJ_TRIG_TIM1_TRGO | ADC_INJ_TRIG_MODE_RISING);
-	//config_ADC_watchdog(ADC_WDG_CH0 | ADC_WDG_SCAN_SINGLE | ADC_WDG_TYPE_INJECTED, 200, 3900);
-	config_ADC_IRQ(1, ADC_IRQ_ENABLE_JEOC);// | ADC_IRQ_ENABLE_WDG);
+	config_ADC_watchdog(ADC_WDG_CH0 | ADC_WDG_SCAN_SINGLE | ADC_WDG_TYPE_INJECTED, 200, 3900);
+	config_ADC_IRQ(1, ADC_IRQ_ENABLE_JEOC | ADC_IRQ_ENABLE_WDG);
 	config_ADC_GPIO_inj_channel(GPIOA, 0, ADC_SAMPLE_28_CYCLES, 409, 0);
 
+	// TODO: TIM TRGO for ADC trigger!!!!
+	// TODO: OR use CC in combination with:
+	// TODO: use capture compare interrupt (if possible) for stepper edge generation
+	// TODO: try combining these two concepts for sync purposes (EMI reduction may increase accuracy)
 
 	config_UART(USART1_TX_A9, USART1_RX_A10, 115200);
 	config_I2C(I2C2_B10_SCL, I2C2_B9_SDA, 0x00);

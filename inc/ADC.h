@@ -183,7 +183,7 @@ typedef enum {
 
 
 void config_ADC(uint64_t flags);
-void config_ADC_watchdog(uint32_t flags, uint16_t high_threshold, uint16_t low_threshold);
+void config_ADC_watchdog(uint32_t flags, uint16_t low_threshold, uint16_t high_threshold);
 void config_ADC_IRQ(uint8_t priority, uint32_t flags);
 
 void config_ADC_GPIO_inj_channel(
