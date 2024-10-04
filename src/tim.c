@@ -21,6 +21,11 @@ void config_TIM(TIM_t* tim, uint32_t prescaler, uint32_t limit) {
 	else														{ RCC->APB1ENR |= (0b1u << (((uint32_t)tim - APB1PERIPH_BASE) >> 10u)); }
 	tim->PSC = prescaler;
 	tim->ARR = limit;
+
+	tim->CR2 = (tim->CR2 & ~0x00000070UL) | (TIM_TRGO_UPDATE);  // TODO flags
+	tim->SMCR &= ~0x00000080UL;
+
+	tim->EGR = 0x00000001UL;	// update shadow registers
 }
 void disable_TIM(TIM_t* tim) {
 	if ((((uint32_t)tim) - APB1PERIPH_BASE) >= 0x00010000UL)	{ RCC->APB2ENR &= ~(0b1u << (((uint32_t)tim - APB2PERIPH_BASE) >> 10u)); }

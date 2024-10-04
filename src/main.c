@@ -6,6 +6,7 @@
 #include "RTC.h"
 #include "I2C.h"
 #include "ADC.h"
+#include "tim.h"
 
 #include "AS5600/AS5600.h"
 
@@ -13,6 +14,12 @@
 
 
 const char* msg = "Hello World!";
+volatile uint16_t angle = 0;
+
+
+void TIM1_update_handler(void) {
+	TIM1->SR &= ~0x00000001UL;
+}
 
 void RTC_stamp_handler(void) {
 	EXTI->PR = 0x00200000UL;
@@ -26,6 +33,7 @@ void EXTI5_9_handler(void) {
 	return;
 }
 
+
 void ADC_handler(void) {
 	uint8_t status = ADC1->SR;
 	ADC1->SR = ~status;
@@ -34,10 +42,8 @@ void ADC_handler(void) {
 	} if (status & 0b000010) {
 		return;  // EOC
 	} if (status & 0b000100) {
-		uint32_t angle = ADC1->JDR1;
-		uint32_t anglei2c = AS5600_get_angle(I2C2, 10);
-		uint32_t angle_adj = angle + (angle / 4);
-		(void)angle_adj; (void)anglei2c;	// max 8 units off!!!!
+		uint32_t a = ADC1->JDR1;
+		angle = a + (a / 4);
 		return;  // JEOC
 	} if (status & 0b10000) {
 		return;  // OVR
@@ -53,11 +59,11 @@ void AS5600_app(void) {
 	volatile uint8_t stat = AS5600_get_status(I2C2, 10);
 
 	start_ADC(0, 1);
+	start_TIM(TIM1);
 
-	volatile uint16_t angle;
 	for (;;) {
-		delay_ms(10);
-		ADC1->CR2 |= (1 << 22);
+		//delay_ms(10);
+		//ADC1->CR2 |= (1 << 22);
 		//delay_ms(500);
 		//angle = AS5600_get_angle(I2C2, 10);
 		//(void)stat; (void)angle;
@@ -70,7 +76,7 @@ void main(void) {
 	set_SYS_hardware_config(PWR_LVL_NOM, 25000000);						// 3v3, HSE@25MHz
 	//set_SYS_oscilator_config(0, 1, 0, 1, 1, 0, 0, 0, 0);				// enable HSE, LSE, CSS and the backup-domain
 	set_SYS_oscilator_config(0, 1, 0, 0, 1, 0, 0, 0, 0);				// enable HSE, CSS and the backup-domain
-	set_SYS_PLL_config(PLL_CLK_SRC_HSE, 12U, 96U, PLL_P_DIV_2, 0, 0);	// enable PLL @ 25MHz / 12 * 96 / 2 -> 100MHz
+	set_SYS_PLL_config(PLL_CLK_SRC_HSE, 12U, 96U, PLL_P_DIV_4, 0, 0);	// enable PLL @ 25MHz / 12 * 96 / 2 -> 100MHz
 	//set_SYS_backup_domain_config();										// enable backup domain
 	//set_SYS_RTC_config(RTC_SRC_LSE, 0U);								// enable RTC
 	set_SYS_clock_config(SYS_CLK_SRC_PLL_P, AHB_CLK_NO_DIV, APBx_CLK_DIV2, APBx_CLK_NO_DIV);
@@ -87,10 +93,16 @@ void main(void) {
 	//start_EXTI(0);
 
 	// ADC	TODO: redo flags
-	config_ADC(ADC_CLK_DIV2 | ADC_INJ_DISC_ENABLE | ADC_RES_12B | ADC_EOC_SINGLE | ADC_INJ_TRIG_TIM1_TRGO | ADC_INJ_TRIG_MODE_RISING);
-	config_ADC_watchdog(ADC_WDG_CH0 | ADC_WDG_SCAN_SINGLE | ADC_WDG_TYPE_INJECTED, 200, 3900);
-	config_ADC_IRQ(1, ADC_IRQ_ENABLE_JEOC | ADC_IRQ_ENABLE_WDG);
+	config_ADC(ADC_CLK_DIV2 | ADC_INJ_DISC | ADC_RES_12B | ADC_EOC_SINGLE | ADC_INJ_TRIG_TIM1_TRGO | ADC_INJ_TRIG_MODE_RISING);
+	config_ADC_watchdog(0, ADC_WDG_TYPE_INJECTED, 200, 3900);
+	config_ADC_IRQ(1, ADC_IRQ_JEOC | ADC_IRQ_WDG);
 	config_ADC_GPIO_inj_channel(GPIOA, 0, ADC_SAMPLE_28_CYCLES, 409, 0);
+
+	// TIM
+	config_TIM(TIM1, 10000, 100);  // 100 Hz
+	start_TIM_update_irq(TIM1);
+	// TODO: config_TIM_master
+	// TODO: config_TIM_slave
 
 	// TODO: TIM TRGO for ADC trigger!!!!
 	// TODO: OR use CC in combination with:
@@ -107,7 +119,6 @@ void main(void) {
 	/*!< test apps */
 	AS5600_app();
 
-	uint32_t t = 0x12345678;
 	uint16_t angle;
 	while (1) {
 		GPIO_toggle(GPIOA, 8);

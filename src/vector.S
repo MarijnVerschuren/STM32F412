@@ -48,6 +48,9 @@ IVT:
 .word 0				// CAN1_RX1_IRQn
 .word 0				// CAN1_SCE_IRQn
 .word EXTI5_9_handler
+.word 0				// TIM1_BRK_TIM9_IRQn
+.word TIM1_update_handler
+
 
 .size IVT, .-IVT
 
@@ -69,6 +72,8 @@ default_handler:
  * */
 .weak RTC_stamp_handler
 .thumb_set RTC_stamp_handler,	RTC_tamper_handler
+.weak TIM1_update_handler
+.thumb_set TIM1_update_handler,	TIM10_handler
 
 
 
@@ -108,6 +113,9 @@ default_handler:
 .thumb_set EXTI4_handler,		default_handler
 .weak EXTI5_9_handler
 .thumb_set EXTI5_9_handler,		default_handler
+
 .weak ADC_handler
 .thumb_set ADC_handler,			default_handler
 
+.weak TIM10_handler				// TIM1_update_handler
+.thumb_set TIM10_handler,		default_handler

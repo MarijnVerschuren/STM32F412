@@ -13,8 +13,8 @@ void config_ADC(uint64_t flags) {
 	ADC1->CR1 =			(flags & 0xFFFFFF00U);	// resolution, mode
 	ADC1->CR2 |=		(flags >> 32);			// EOC, align
 }
-void config_ADC_watchdog(uint32_t flags, uint16_t low_threshold, uint16_t high_threshold) {
-	ADC1->CR1 |= flags;
+void config_ADC_watchdog(uint8_t channel, uint32_t flags, uint16_t low_threshold, uint16_t high_threshold) {
+	ADC1->CR1 |= (channel | flags);
 	ADC1->LTR = low_threshold;
 	ADC1->HTR = high_threshold;
 }
