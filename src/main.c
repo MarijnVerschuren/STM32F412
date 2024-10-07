@@ -65,7 +65,7 @@ void main(void) {
 	// GPIO
 	config_GPIO(GPIOA, 8, GPIO_output | GPIO_no_pull | GPIO_push_pull);
 
-	// EXTI
+	// EXTI TODO: flags??
 	//config_EXTI_GPIO(GPIOA, 0, 0, 1);
 	//NVIC_set_IRQ_priority(EXTI0_IRQn, 0);
 	//start_EXTI(0);
@@ -104,14 +104,5 @@ void main(void) {
 	while (1) {
 		GPIO_toggle(GPIOA, 8);
 		delay_ms(angle / 10);
-		//*((uint32_t*)&tr) = RTC->TR;
-		//*((uint32_t*)&dr) = RTC->DR;
-		//(void)tr;
 	}
-	// TODO: reset RTC in sysinit
-	// DFSDM?
-
-	// TODO: desolder AS5600 workaround
-	// TODO: cut PGO pin
-	// TODO: jump PGO_pad DIR pin
 }
