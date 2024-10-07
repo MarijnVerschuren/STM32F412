@@ -11,6 +11,7 @@
 typedef enum {
 	TIM_PIN_DISABLE =	0x00000000,
 	// TIM1
+	// TODO
 } TIM_GPIO_t;
 
 typedef enum {
@@ -33,6 +34,8 @@ typedef enum {
 
 /*!< init / enable / disable */
 void config_TIM(TIM_t* tim, uint32_t prescaler, uint32_t limit);
+void config_TIM_master(TIM_t* tim, uint32_t prescaler, uint32_t limit, uint32_t flags);	// TODO: config channels
+void config_TIM_slave(TIM_t* tim, uint32_t prescaler, uint32_t limit, uint32_t flags);	// TODO: config trigger
 void disable_TIM(TIM_t* tim);
 /*!< actions */
 void start_TIM(TIM_t* tim);

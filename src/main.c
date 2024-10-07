@@ -13,7 +13,6 @@
 #include "test.h"
 
 
-const char* msg = "Hello World!";
 volatile uint16_t angle = 0;
 
 
@@ -51,26 +50,6 @@ void ADC_handler(void) {
 }
 
 
-void AS5600_app(void) {
-	while (config_AS5600(
-		I2C2, AS5600_POW_NOM | AS5600_HYST_2LSB | AS5600_MODE_REDUCED_ANALOG |
-		AS5600_SFILTER_2 | AS5600_FFILTER_10LSB | AS5600_WDG_ON, 10
-	)) { delay_ms(100); }
-	volatile uint8_t stat = AS5600_get_status(I2C2, 10);
-
-	start_ADC(0, 1);
-	start_TIM(TIM1);
-
-	for (;;) {
-		//delay_ms(10);
-		//ADC1->CR2 |= (1 << 22);
-		//delay_ms(500);
-		//angle = AS5600_get_angle(I2C2, 10);
-		//(void)stat; (void)angle;
-	}
-}
-
-
 // application
 void main(void) {
 	set_SYS_hardware_config(PWR_LVL_NOM, 25000000);						// 3v3, HSE@25MHz
@@ -85,31 +64,27 @@ void main(void) {
 
 	// GPIO
 	config_GPIO(GPIOA, 8, GPIO_output | GPIO_no_pull | GPIO_push_pull);
-	config_GPIO(GPIOA, 0, GPIO_input | GPIO_pull_up | GPIO_open_drain);
 
 	// EXTI
 	//config_EXTI_GPIO(GPIOA, 0, 0, 1);
 	//NVIC_set_IRQ_priority(EXTI0_IRQn, 0);
 	//start_EXTI(0);
 
-	// ADC	TODO: redo flags
+	// ADC
 	config_ADC(ADC_CLK_DIV2 | ADC_INJ_DISC | ADC_RES_12B | ADC_EOC_SINGLE | ADC_INJ_TRIG_TIM1_TRGO | ADC_INJ_TRIG_MODE_RISING);
 	config_ADC_watchdog(0, ADC_WDG_TYPE_INJECTED, 200, 3900);
 	config_ADC_IRQ(1, ADC_IRQ_JEOC | ADC_IRQ_WDG);
 	config_ADC_GPIO_inj_channel(GPIOA, 0, ADC_SAMPLE_28_CYCLES, 409, 0);
 
 	// TIM
-	config_TIM(TIM1, 10000, 100);  // 100 Hz
+	config_TIM_master(TIM1, 10000, 100, TIM_TRGO_UPDATE);  // 100 Hz
 	start_TIM_update_irq(TIM1);
-	// TODO: config_TIM_master
-	// TODO: config_TIM_slave
+	// TODO: is it possible to combine PWM and UPDATE triggers to make sure move and read are not done psudo-simultanuisly
 
-	// TODO: TIM TRGO for ADC trigger!!!!
-	// TODO: OR use CC in combination with:
-	// TODO: use capture compare interrupt (if possible) for stepper edge generation
-	// TODO: try combining these two concepts for sync purposes (EMI reduction may increase accuracy)
-
+	// USART
 	config_UART(USART1_TX_A9, USART1_RX_A10, 115200);
+
+	// I2C
 	config_I2C(I2C2_B10_SCL, I2C2_B9_SDA, 0x00);
 
 	//uint32_t ts = 1726832418;
@@ -117,13 +92,18 @@ void main(void) {
 	//config_RTC_ext_ts(1U, RTC_TS_POLARITY_RISING);
 
 	/*!< test apps */
-	AS5600_app();
+	while (config_AS5600(
+		I2C2, AS5600_POW_NOM | AS5600_HYST_2LSB | AS5600_MODE_REDUCED_ANALOG |
+		AS5600_SFILTER_2 | AS5600_FFILTER_10LSB | AS5600_WDG_ON, 10
+	)) { delay_ms(10); }
+	volatile uint8_t stat = AS5600_get_status(I2C2, 10);
 
-	uint16_t angle;
+	start_ADC(0, 1);
+	start_TIM(TIM1);
+
 	while (1) {
 		GPIO_toggle(GPIOA, 8);
-		USART_print(USART1, msg, 100);
-		delay_ms(100);
+		delay_ms(angle / 10);
 		//*((uint32_t*)&tr) = RTC->TR;
 		//*((uint32_t*)&dr) = RTC->DR;
 		//(void)tr;

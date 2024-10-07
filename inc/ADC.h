@@ -98,10 +98,10 @@ typedef enum {
 
 
 typedef enum {
-	ADC_IRQ_EOC =		0b1UL << 5,
-	ADC_IRQ_WDG =		0b1UL << 6,
-	ADC_IRQ_JEOC =		0b1UL << 7,
-	ADC_IRQ_OVR =		0b1UL << 26
+	ADC_IRQ_EOC =				0b1UL << 5,
+	ADC_IRQ_WDG =				0b1UL << 6,
+	ADC_IRQ_JEOC =				0b1UL << 7,
+	ADC_IRQ_OVR =				0b1UL << 26
 } ADC_IRQ_FLAG_t;
 
 

@@ -13,19 +13,39 @@ static inline uint32_t TIM_to_update_IRQn(TIM_t* tim) {
 	if (irqn > TIM4_IRQn)										{ return TIM5_IRQn; }
 	return irqn;
 }
+static inline void enable_TIM(TIM_t* tim) {
+	if ((((uint32_t)tim) - APB1PERIPH_BASE) >= 0x00010000UL)	{ RCC->APB2ENR |= (0b1u << (((uint32_t)tim - APB2PERIPH_BASE) >> 10u)); }
+	else														{ RCC->APB1ENR |= (0b1u << (((uint32_t)tim - APB1PERIPH_BASE) >> 10u)); }
+}
 
 
 /*!< init / disable */
 void config_TIM(TIM_t* tim, uint32_t prescaler, uint32_t limit) {
-	if ((((uint32_t)tim) - APB1PERIPH_BASE) >= 0x00010000UL)	{ RCC->APB2ENR |= (0b1u << (((uint32_t)tim - APB2PERIPH_BASE) >> 10u)); }
-	else														{ RCC->APB1ENR |= (0b1u << (((uint32_t)tim - APB1PERIPH_BASE) >> 10u)); }
+	enable_TIM(tim);
+	tim->PSC = prescaler;
+	tim->ARR = limit;
+	tim->EGR = 0x00000001UL;	// update shadow registers
+}
+void config_TIM_master(TIM_t* tim, uint32_t prescaler, uint32_t limit, uint32_t flags) {
+	enable_TIM(tim);
 	tim->PSC = prescaler;
 	tim->ARR = limit;
 
-	tim->CR2 = (tim->CR2 & ~0x00000070UL) | (TIM_TRGO_UPDATE);  // TODO flags
-	tim->SMCR &= ~0x00000080UL;
+	tim->CR2 = (tim->CR2 & ~0x00000070UL) | (flags);
+	tim->SMCR &= ~0x00000080UL;	// master mode
 
 	tim->EGR = 0x00000001UL;	// update shadow registers
+
+}
+void config_TIM_slave(TIM_t* tim, uint32_t prescaler, uint32_t limit, uint32_t flags) {
+	enable_TIM(tim);
+	tim->PSC = prescaler;
+	tim->ARR = limit;
+	// TODO
+	tim->SMCR |= 0x00000080UL;	// slave mode
+
+	tim->EGR = 0x00000001UL;	// update shadow registers
+
 }
 void disable_TIM(TIM_t* tim) {
 	if ((((uint32_t)tim) - APB1PERIPH_BASE) >= 0x00010000UL)	{ RCC->APB2ENR &= ~(0b1u << (((uint32_t)tim - APB2PERIPH_BASE) >> 10u)); }
