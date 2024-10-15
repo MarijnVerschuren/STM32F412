@@ -55,6 +55,10 @@ void disable_TIM(TIM_t* tim) {
 /*!< actions */
 void start_TIM(TIM_t* tim)		{ tim->CR1 |= 0x1UL; }
 void stop_TIM(TIM_t* tim)		{ tim->CR1 &= ~0x1UL; }
+void delay_TIM(TIM_t* tim, uint32_t count) {
+	uint32_t start = tim->CNT;
+	while (tim->CNT - start < count);
+}
 
 /*!< irq */
 void start_TIM_update_irq(TIM_t* tim) {

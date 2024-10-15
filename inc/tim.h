@@ -40,6 +40,7 @@ void disable_TIM(TIM_t* tim);
 /*!< actions */
 void start_TIM(TIM_t* tim);
 void stop_TIM(TIM_t* tim);
+void delay_TIM(TIM_t* tim, uint32_t count);
 /*!< irq */
 void start_TIM_update_irq(TIM_t* tim);
 void stop_TIM_update_irq(TIM_t* tim);
