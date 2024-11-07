@@ -53,7 +53,7 @@ typedef enum {
 } RTC_TS_pol_t;
 
 
-// init
+/*!< enable / disable */
 void fconfig_RTC(
 	uint8_t async_pre, uint16_t sync_pre, RTC_timestamp_t time,
 	RTC_wakeup_t wakeup, RTC_wakeup_div_t wakeup_div, uint16_t wakeup_reload
@@ -61,10 +61,10 @@ void fconfig_RTC(
 void config_RTC(RTC_timestamp_t time, RTC_wakeup_t wakeup, RTC_wakeup_div_t wakeup_div, uint16_t wakeup_reload);
 void uconfig_RTC(uint32_t time, RTC_wakeup_t wakeup, RTC_wakeup_div_t wakeup_div, uint16_t wakeup_reload);
 void reset_RTC();
-// extra
+/*!< misc */
 void config_RTC_ext_ts(uint8_t int_enable, RTC_TS_pol_t pol);
-
-// misc
+RTC_timestamp_t UNIX_BCD(uint32_t epoch);
+uint32_t BCD_UNIX(RTC_timestamp_t time);
 uint32_t RTC_unix(void);
 
 

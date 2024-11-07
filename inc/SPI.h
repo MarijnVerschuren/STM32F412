@@ -4,5 +4,87 @@
 
 #ifndef STM32F412_SPI_H
 #define STM32F412_SPI_H
+#include "periph.h"
+#include "GPIO.h"
+#include "sys.h"
+
+
+/*!<
+ * types
+ * */
+typedef enum {
+	SPI_PIN_DISABLE =	0x00000000UL,
+	// SPI
+	SPI1_NSS_A4 =		0x540000C1UL,
+	SPI1_SCK_A5 =		0x550000C1UL,
+	SPI1_MISO_A6 =		0x560000C1UL,
+	SPI1_MOSI_A7 =		0x570000C1UL,
+} SPI_GPIO_t;
+
+typedef enum {
+	// CPHA
+	SPI_CPHA_FIRST_EDGE =	0x00000000UL,	/* data capture on first edge */
+	SPI_CPHA_SECOND_EDGE =	0x00000001UL,	/* data capture on second edge */
+	// CPOL
+	SPI_CPOL_LOW =			0x00000000UL,	/* low when idle */
+	SPI_CPOL_HIGH =			0x00000002UL,	/* high when idle */
+	// CLK
+	SPI_CLK_DIV_2 =			0x00000000UL,
+	SPI_CLK_DIV_4 =			0x00000008UL,
+	SPI_CLK_DIV_8 =			0x00000010UL,
+	SPI_CLK_DIV_16 =		0x00000018UL,
+	SPI_CLK_DIV_32 =		0x00000020UL,
+	SPI_CLK_DIV_64 =		0x00000028UL,
+	SPI_CLK_DIV_128 =		0x00000030UL,
+	SPI_CLK_DIV_256 =		0x00000038UL,
+	// ENDIANNESS
+	SPI_ENDIANNESS_MSB =	0x00000000UL,
+	SPI_ENDIANNESS_LSB =	0x00000080UL,
+	// NSS MODE
+	SPI_NSS_HARDWARE =		0x00000000UL,
+	SPI_NSS_SOFTWARE =		0x00000200UL,
+	// MODE
+	SPI_MODE_DUPLEX =		0x00000000UL,
+	SPI_MODE_SIMPLEX =		0x00001000UL,	/* BIDIOE is used to switch between RX and TX */
+	SPI_MODE_RXONLY =		0x00000400UL,
+	// CRC
+	SPI_CRC_8 =				0x00002000UL,	/* NOTE: use CRCNEXT */
+	SPI_CRC_16 =			0x00002800UL,	/* NOTE: use CRCNEXT */
+	// TODO: MASTER NSS?
+	// FRAME
+	SPI_NSS_PULSE =			0x00080000UL,
+	// FRAME
+	SPI_FRAME_MOTOROLA =	0x00000000UL,
+	SPI_FRAME_TI =			0x00100000UL,
+	// INTERRUPTS
+	SPI_ERROR_IE =			0x00200000UL,
+	SPI_RXNE_IE =			0x00400000UL,
+	SPI_TXE_IE =			0x00800000UL,
+	// DATA SIZE
+	SPI_DATA_4	=			0x03000000UL,
+	SPI_DATA_5	=			0x04000000UL,
+	SPI_DATA_6	=			0x05000000UL,
+	SPI_DATA_7	=			0x06000000UL,
+	SPI_DATA_8	=			0x07000000UL,
+	SPI_DATA_9	=			0x08000000UL,
+	SPI_DATA_10	=			0x09000000UL,
+	SPI_DATA_11	=			0x0A000000UL,
+	SPI_DATA_12	=			0x0B000000UL,
+	SPI_DATA_13	=			0x0C000000UL,
+	SPI_DATA_14	=			0x0D000000UL,
+	SPI_DATA_15	=			0x0E000000UL,
+	SPI_DATA_16	=			0x0F000000UL,
+	// FIFO
+	SPI_FIFO_TH_HALF =		0x00000000UL,
+	SPI_FIFO_TH_QUARTER =	0x10000000UL
+} SPI_flag_t;
+
+
+/*!< init / enable / disable */
+void fconfig_SPI_master(SPI_GPIO_t sck, SPI_GPIO_t mosi, SPI_GPIO_t miso, uint32_t flags, uint16_t crc_poly);
+void config_SPI_master(SPI_GPIO_t sck, SPI_GPIO_t mosi, SPI_GPIO_t miso, uint32_t flags);
+
+uint32_t SPI_master_write8(SPI_t* spi, const uint8_t* buffer, uint32_t size, uint32_t timeout);
+
 
 #endif //STM32F412_SPI_H

@@ -2,3 +2,4 @@
 build_debug/
 build_release/
 build_space_optimized/
+.obsidian/

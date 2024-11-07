@@ -9,9 +9,9 @@
 
 
 /*!< core peripherals */
-#define SCB						((SCB_t*)SCB_BASE)
-#define NVIC					((NVIC_t*)NVIC_BASE)
 #define SYS_TICK				((SYS_TICK_t*)SYS_TICK_BASE)
+#define NVIC					((NVIC_t*)NVIC_BASE)
+#define SCB						((SCB_t*)SCB_BASE)
 
 
 /*!< APB1 peripherals */
@@ -25,6 +25,8 @@
 #define TIM13					((TIM_t*)TIM13_BASE)
 #define TIM14					((TIM_t*)TIM14_BASE)
 #define RTC						((RTC_t*)RTC_BASE)
+#define SPI2					((SPI_t*)SPI2_BASE)
+#define SPI3					((SPI_t*)SPI3_BASE)
 #define USART2					((USART_t*)USART2_BASE)
 #define USART3					((USART_t*)USART3_BASE)
 #define I2C1					((I2C_t*)I2C1_BASE)
@@ -40,6 +42,8 @@
 #define USART6					((USART_t*)USART6_BASE)
 #define ADC1					((ADC_t*)ADC1_BASE)
 #define ADC_COMMON				((ADC_COMMON_t*)ADC_COMMON_BASE)
+#define SPI1					((SPI_t*)SPI1_BASE)
+#define SPI4					((SPI_t*)SPI4_BASE)
 #define SYSCFG					((SYSCFG_t*)SYSCFG_BASE)
 #define EXTI					((EXTI_t *)EXTI_BASE)
 #define TIM9					((TIM_t*)TIM9_BASE)
@@ -244,7 +248,7 @@ typedef struct {
 	_IO uint32_t	TAFCR;			/* tamper and af configuration       0x40 */
 	_IO uint32_t	ALRMASSR;		/* alarm A sub second                0x44 */
 	_IO uint32_t	ALRMBSSR;		/* alarm B sub second                0x48 */
-		uint32_t	_0;				/*                                   0x88 */
+		uint32_t	_0;				/*                                   0x4C */
 	_IO uint32_t	BKPR[20];		/* backup registers             0x50-0x9C */
 } RTC_t;
 
@@ -258,6 +262,19 @@ typedef struct {
 	_IO uint32_t	CR3;			/* Control 3                         0x14 */
 	_IO uint32_t	GTPR;			/* Guard time and prescaler          0x18 */
 } USART_t;
+
+/*!< SPI */
+typedef struct {
+	_IO	uint32_t	CR1;			/* control 1                         0x00 */
+	_IO	uint32_t	CR2;			/* control 2                         0x04 */
+	_IO	uint32_t	SR;				/* status                            0x08 */
+	_IO	uint32_t	DR;				/* data                              0x0C */
+	_IO	uint32_t	CRCPR;			/* CRC polynomial                    0x10 */
+	_IO	uint32_t	RXCRCR;			/* RX CRC                            0x14 */
+	_IO	uint32_t	TXCRCR;			/* TX CRC                            0x18 */
+	_IO	uint32_t	I2SCFGR;		/* I2S configuration                 0x1C */
+	_IO	uint32_t	I2SPR;			/* I2S prescaler                     0x20 */
+} SPI_t;
 
 /*!< IWDG TODO */
 

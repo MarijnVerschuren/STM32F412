@@ -7,6 +7,7 @@
 #include "I2C.h"
 #include "ADC.h"
 #include "tim.h"
+#include "SPI.h"
 
 #include "AS5600/AS5600.h"
 
@@ -87,22 +88,37 @@ void main(void) {
 	// I2C
 	config_I2C(I2C2_B10_SCL, I2C2_B9_SDA, 0x00);
 
+	/*!< SPI */
+	config_GPIO(GPIOA, 4, GPIO_output);
+	config_SPI_master(
+		SPI1_SCK_A5, SPI1_MOSI_A7, SPI1_MISO_A6,
+		SPI_CPHA_FIRST_EDGE | SPI_CPOL_LOW | SPI_CLK_DIV_2 |
+		SPI_ENDIANNESS_MSB | SPI_MODE_DUPLEX | SPI_NSS_SOFTWARE |
+		SPI_FRAME_MOTOROLA | SPI_DATA_8 | SPI_FIFO_TH_HALF
+	);
+	GPIO_write(GPIOA, 4, 1);
+
+	RTC_timestamp_t test = UNIX_BCD(1735689599);
 	//uint32_t ts = 1726832418;
 	//uconfig_RTC(ts, RTC_WAKEUP_DISABLE, RTC_WAKEUP_DIV16, 0x0000U);
 	//config_RTC_ext_ts(1U, RTC_TS_POLARITY_RISING);
 
 	/*!< test apps */
-	while (config_AS5600(
-		I2C2, AS5600_POW_NOM | AS5600_HYST_2LSB | AS5600_MODE_REDUCED_ANALOG |
-		AS5600_SFILTER_2 | AS5600_FFILTER_10LSB | AS5600_WDG_ON, 10
-	)) { delay_ms(10); }
-	volatile uint8_t stat = AS5600_get_status(I2C2, 10);
+	//while (config_AS5600(
+	//	I2C2, AS5600_POW_NOM | AS5600_HYST_2LSB | AS5600_MODE_REDUCED_ANALOG |
+	//	AS5600_SFILTER_2 | AS5600_FFILTER_10LSB | AS5600_WDG_ON, 10
+	//)) { delay_ms(10); }
+	//volatile uint8_t stat = AS5600_get_status(I2C2, 10);
 
 	start_ADC(0, 1);
 	start_TIM(TIM1);
 
 	while (1) {
-		GPIO_toggle(GPIOA, 8);
-		delay_ms(angle / 10);
+		//GPIO_toggle(GPIOA, 8);
+		//delay_ms(angle / 10);
+		delay_ms(100);
+		GPIO_write(GPIOA, 4, 0);
+		SPI_master_write8(SPI2, "Hello world", 11, 10);
+		GPIO_write(GPIOA, 4, 1);
 	}
 }
