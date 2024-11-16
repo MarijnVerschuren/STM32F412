@@ -20,8 +20,11 @@ if __name__ == "__main__":
 	arg = parse.parse_args()
 	
 	clocks = {
-		"APB1": 0, "AHB1": 2,
-		"APB2": 1, "AHB2": 3
+		"AHB1": 0,
+		"AHB2": 1,
+		"AHB3": 2,
+		"APB1": 4,
+		"APB2": 5
 	}
 
 	ports = {

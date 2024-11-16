@@ -6,10 +6,6 @@
 
 
 /*!< static */
-static inline void enable_I2C_clock(I2C_t* i2c) {
-	RCC->APB1ENR |= (0b1u << (((uint32_t)i2c - APB1PERIPH_BASE) >> 10u));
-}
-
 static inline void I2C_reset_flags(I2C_t* i2c) {
 	(void)i2c->SR1;
 	(void)i2c->SR2;
@@ -85,8 +81,7 @@ void fconfig_I2C(I2C_GPIO_t scl, I2C_GPIO_t sda, uint16_t own_address, I2C_addre
 	if (scl_i2c != sda_i2c) { return; }; i2c = scl_i2c;
 	fconfig_GPIO(int_to_GPIO(dscl.port), dscl.pin, GPIO_alt_func | GPIO_pull_up | GPIO_open_drain | GPIO_medium_speed, dscl.alt);
 	fconfig_GPIO(int_to_GPIO(dsda.port), dsda.pin, GPIO_alt_func | GPIO_pull_up | GPIO_open_drain | GPIO_medium_speed, dsda.alt);
-	enable_I2C_clock(i2c);
-	reset_I2C(i2c);
+	enable_dev(i2c); reset_I2C(i2c);
 	i2c->OAR1 = (address_type << 15) | (0x3ff & (own_address << (1 - address_type)));
 	if (dual_address) { i2c->OAR2 = (0xff & ((dual_address << 1) | 0b1u)); }  // enable dual addressing
 	i2c->OAR1 |= 0b1UL << 14;		// bit 14 should always be kept at one

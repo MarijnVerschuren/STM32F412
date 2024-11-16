@@ -54,10 +54,10 @@ void ADC_handler(void) {
 // application
 void main(void) {
 	set_SYS_hardware_config(PWR_LVL_NOM, 25000000);						// 3v3, HSE@25MHz
-	//set_SYS_oscilator_config(0, 1, 0, 1, 1, 0, 0, 0, 0);				// enable HSE, LSE, CSS and the backup-domain
-	set_SYS_oscilator_config(0, 1, 0, 0, 1, 0, 0, 0, 0);				// enable HSE, CSS and the backup-domain
+	set_SYS_oscilator_config(0, 1, 0, 1, 1, 0, 0, 0, 0);				// enable HSE, LSE, CSS and the backup-domain
+	//set_SYS_oscilator_config(0, 1, 0, 0, 1, 0, 0, 0, 0);				// enable HSE, CSS and the backup-domain
 	set_SYS_PLL_config(PLL_CLK_SRC_HSE, 12U, 96U, PLL_P_DIV_4, 0, 0);	// enable PLL @ 25MHz / 12 * 96 / 2 -> 100MHz
-	//set_SYS_backup_domain_config();										// enable backup domain
+	//set_SYS_backup_domain_config();									// enable backup domain
 	//set_SYS_RTC_config(RTC_SRC_LSE, 0U);								// enable RTC
 	set_SYS_clock_config(SYS_CLK_SRC_PLL_P, AHB_CLK_NO_DIV, APBx_CLK_DIV2, APBx_CLK_NO_DIV);
 	set_SYS_tick_config(1);												// enable SYS_tick with interrupt
@@ -65,6 +65,7 @@ void main(void) {
 
 	// GPIO
 	config_GPIO(GPIOA, 8, GPIO_output | GPIO_no_pull | GPIO_push_pull);
+	config_GPIO(GPIOC, 13, GPIO_output | GPIO_no_pull | GPIO_push_pull);
 
 	// EXTI TODO: flags??
 	//config_EXTI_GPIO(GPIOA, 0, 0, 1);
@@ -110,15 +111,17 @@ void main(void) {
 	//)) { delay_ms(10); }
 	//volatile uint8_t stat = AS5600_get_status(I2C2, 10);
 
+	// TODO: SPI1->CR1 is currently 0x200, should be 0x788?
+
 	start_ADC(0, 1);
 	start_TIM(TIM1);
-
+	uint64_t a = 0x0123456789ABCDEFULL;
 	while (1) {
 		//GPIO_toggle(GPIOA, 8);
 		//delay_ms(angle / 10);
-		delay_ms(100);
+		//GPIO_toggle(GPIOC, 13);
 		GPIO_write(GPIOA, 4, 0);
-		SPI_master_write8(SPI2, "Hello world", 11, 10);
+		SPI_master_write8(SPI1, (void*)&a, 8, 10);
 		GPIO_write(GPIOA, 4, 1);
 	}
 }

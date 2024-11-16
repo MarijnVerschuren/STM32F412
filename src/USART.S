@@ -3,15 +3,14 @@
 
 // include memory map defines with the C preprocessor
 #include "memory_map.h"	// define include
-.include "base.s"		// macro include
+.include "macro.s"		// macro include
 
 // externals
 .global APB1_clock_frequency
 .global APB2_clock_frequency
+.extern enable_dev
 
 // functions
-.global enable_USART
-.global disable_USART
 .global reset_USART
 .global fconfig_UART
 .global config_UART
@@ -25,56 +24,6 @@
 /*!<
  * functions
  * */
- // void enable_USART(USART_t*);
-.section .text.enable_USART
-.type enable_USART, %function
-enable_USART:
-	ldr ip, =RCC_BASE
-
-	ldr r1, =APB2PERIPH_BASE
-	cmp r0, r1
-	ite lo
-	subcc r0, r0, APB1PERIPH_BASE		// subtract APB1 base
-	subcs r0, r0, r1					// subtract APB2 base
-	lsr r0, r0, #10
-
-	ite lo
-	addcc ip, RCC_APB1ENR
-	addcs ip, RCC_APB2ENR
-	mov r2, #1
-	lsl r2, r2, r0
-	ldr r1, [ip]
-	orr r1, r1, r2
-	str r1, [ip]
-	bx lr
-.size enable_USART, .-enable_USART
-
-
-// void disable_USART(USART_t*);
-.section .text.disable_USART
-.type disable_USART, %function
-disable_USART:
-	ldr ip, =RCC_BASE
-
-	ldr r1, =APB2PERIPH_BASE
-	cmp r0, r1
-	ite lo
-	subcc r0, r0, APB1PERIPH_BASE		// subtract APB1 base
-	subcs r0, r0, r1					// subtract APB2 base
-	lsr r0, r0, #10
-
-	ite lo
-	addcc ip, RCC_APB1ENR
-	addcs ip, RCC_APB2ENR
-	mov r2, #1
-	lsl r2, r2, r0
-	ldr r1, [ip]
-	bic r1, r1, r2
-	str r1, [ip]
-	bx r3
-.size disable_USART, .-disable_USART
-
-
 // void reset_USART(USART_t*);
 .section .text.reset_USART
 .type reset_USART, %function
@@ -97,11 +46,11 @@ fconfig_UART:
 	// check pin inputs
 	cmp r1, #0x00000000				// RX enabled?
 	beq fconfig_simplex				// configure for TX only
-	orr r8, r8, #0x00000004			// RX enable
+	orr r7, r7, #0x00000004			// RX enable
 	cmp r0, #0x00000000				// TX enabled?
 	itt eq
 	moveq r0, r1					// move R1 to R0
-	biceq r8, r8, #0x00000008		// TX disable
+	biceq r7, r7, #0x00000008		// TX disable
 	beq fconfig_simplex				// configure for RX only
 	push {r1}						// save RX pin
 	// configure TX
@@ -135,7 +84,7 @@ fconfig_simplex:
 	bl fconfig_GPIO					// init pin
 	// enable usart
 	mov r0, r5						// load USART into R0
-	bl enable_USART					// enable USART
+	bl enable_dev					// enable USART
 	// config
 	pop {r3, r4}					// load baud and OS
 	udiv r2, r6, r3					// divide APBx_clock_frequency by the baud setting

@@ -59,6 +59,7 @@ add_executable(${PROJECT_NAME}
         src/vector.S
         src/startup.S
         src/sys.S
+        src/base.S
         src/NVIC.S
         src/GPIO.S
         src/EXTI.S

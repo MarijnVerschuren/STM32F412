@@ -12,7 +12,7 @@
  * types
  * */
 typedef enum {
-	TIM_PIN_DISABLE =	0x00000000,
+	TIM_PIN_DISABLE =	0x00000000UL,
 	// TIM1
 	// TODO
 } TIM_GPIO_t;

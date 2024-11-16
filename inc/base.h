@@ -22,6 +22,14 @@ typedef unsigned long long	uint64_t;
 
 #define NULL ((void*)0x00000000UL)
 
+typedef enum {
+	DEV_CLOCK_AHB1 = 0,
+	DEV_CLOCK_AHB2 = 1,
+	DEV_CLOCK_AHB3 = 2,
+	DEV_CLOCK_APB1 = 4,
+	DEV_CLOCK_APB2 = 5
+} dev_clock_id_t;
+
 typedef struct {
 	uint32_t	clk		: 4;		// clock bus
 	uint32_t	periph	: 8;		// peripheral
@@ -37,6 +45,14 @@ typedef struct {
 	volatile uint32_t	i;	// write
 	volatile uint32_t	o;	// read
 } io_buffer_t;
+
+extern void* id_to_dev(uint32_t id);	// only uses: clk, periph
+extern uint32_t dev_to_id(void* dev);	// only writes: clk, periph
+extern void enable_id(uint32_t id);
+extern void disable_id(uint32_t id);
+extern void enable_dev(void* dev);
+extern void disable_dev(void* dev);
+
 
 
 #endif // STM32F412_BASE_H
