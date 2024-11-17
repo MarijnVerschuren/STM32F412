@@ -91,11 +91,11 @@ void main(void) {
 
 	/*!< SPI */
 	config_GPIO(GPIOA, 4, GPIO_output);
-	config_SPI_master(
+	config_SPI_slave(//config_SPI_master(
 		SPI1_SCK_A5, SPI1_MOSI_A7, SPI1_MISO_A6,
-		SPI_CPHA_FIRST_EDGE | SPI_CPOL_LOW | SPI_CLK_DIV_2 |
-		SPI_ENDIANNESS_MSB | SPI_MODE_DUPLEX | SPI_NSS_SOFTWARE |
-		SPI_FRAME_MOTOROLA | SPI_DATA_8 | SPI_FIFO_TH_HALF
+		SPI_ENDIANNESS_MSB | SPI_CPHA_FIRST_EDGE |
+		SPI_CPOL_LOW | SPI_MODE_DUPLEX | SPI_FRAME_MOTOROLA |
+		SPI_DATA_8 | SPI_FIFO_TH_HALF
 	);
 	GPIO_write(GPIOA, 4, 1);
 
@@ -111,17 +111,19 @@ void main(void) {
 	//)) { delay_ms(10); }
 	//volatile uint8_t stat = AS5600_get_status(I2C2, 10);
 
-	// TODO: SPI1->CR1 is currently 0x200, should be 0x788?
 
 	start_ADC(0, 1);
 	start_TIM(TIM1);
-	uint64_t a = 0x0123456789ABCDEFULL;
+	uint64_t rn = 0x0123456789ABCDEFULL;
+	uint64_t rx = 0;
 	while (1) {
 		//GPIO_toggle(GPIOA, 8);
 		//delay_ms(angle / 10);
-		//GPIO_toggle(GPIOC, 13);
+		delay_ms(100);
+		GPIO_toggle(GPIOC, 13);
 		GPIO_write(GPIOA, 4, 0);
-		SPI_master_write8(SPI1, (void*)&a, 8, 10);
+		//SPI_master_write8(SPI1, (void*)&rn, 8, 10);
+		//SPI_master_read8(SPI1, (void*)&rx, 8, 10);
 		GPIO_write(GPIOA, 4, 1);
 	}
 }

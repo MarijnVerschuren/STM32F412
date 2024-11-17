@@ -38,9 +38,6 @@ typedef enum {
 	// ENDIANNESS
 	SPI_ENDIANNESS_MSB =	0x00000000UL,
 	SPI_ENDIANNESS_LSB =	0x00000080UL,
-	// NSS MODE
-	SPI_NSS_HARDWARE =		0x00000000UL,
-	SPI_NSS_SOFTWARE =		0x00000200UL,
 	// MODE
 	SPI_MODE_DUPLEX =		0x00000000UL,
 	SPI_MODE_SIMPLEX =		0x00001000UL,	/* BIDIOE is used to switch between RX and TX */
@@ -81,8 +78,10 @@ typedef enum {
 /*!< init / enable / disable */
 void fconfig_SPI_master(SPI_GPIO_t sck, SPI_GPIO_t mosi, SPI_GPIO_t miso, uint32_t flags, uint16_t crc_poly);
 void config_SPI_master(SPI_GPIO_t sck, SPI_GPIO_t mosi, SPI_GPIO_t miso, uint32_t flags);
+void fconfig_SPI_slave(SPI_GPIO_t sck, SPI_GPIO_t mosi, SPI_GPIO_t miso, uint32_t flags, uint16_t crc_poly);
+void config_SPI_slave(SPI_GPIO_t sck, SPI_GPIO_t mosi, SPI_GPIO_t miso, uint32_t flags);
 
 uint32_t SPI_master_write8(SPI_t* spi, const uint8_t* buffer, uint32_t size, uint32_t timeout);
-
+uint32_t SPI_master_read8(SPI_t* spi, uint8_t* buffer, uint32_t size, uint32_t timeout);
 
 #endif //STM32F412_SPI_H
