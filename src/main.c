@@ -114,16 +114,21 @@ void main(void) {
 
 	start_ADC(0, 1);
 	start_TIM(TIM1);
-	uint64_t rn = 0x0123456789ABCDEFULL;
-	uint64_t rx = 0;
+	uint16_t targets[4] =	{1000, 4000, 150, 2050};
+	uint16_t times[4] =		{1000, 500, 700, 2000};
+	uint8_t i = 0;
+
+	delay_ms(1000);
 	while (1) {
 		//GPIO_toggle(GPIOA, 8);
 		//delay_ms(angle / 10);
-		delay_ms(100);
-		GPIO_toggle(GPIOC, 13);
-		GPIO_write(GPIOA, 4, 0);
-		//SPI_master_write8(SPI1, (void*)&rn, 8, 10);
+		//delay_ms(100);
+		//GPIO_toggle(GPIOC, 13);
+		//GPIO_write(GPIOA, 4, 0);
+		SPI_master_write8(SPI1, (void*)&targets[i], 2, 10);
+		delay_ms(times[i]);
+		i = (i + 1) % 4;
 		//SPI_master_read8(SPI1, (void*)&rx, 8, 10);
-		GPIO_write(GPIOA, 4, 1);
+		//GPIO_write(GPIOA, 4, 1);
 	}
 }
