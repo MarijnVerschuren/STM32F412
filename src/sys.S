@@ -4,6 +4,9 @@
 // include memory map defines with the C preprocessor
 #include "memory_map.h"
 
+/*!<
+ * globals
+ * */
 // objects
 .global tick
 .global sys_config
@@ -11,6 +14,7 @@
 .global sys_reset
 .global sys_tick_handler
 .global delay_ms
+
 
 /*!<
  * variables

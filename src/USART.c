@@ -4,37 +4,38 @@
 #include "USART.h"
 
 
-/*!< irq vars */
-typedef struct {
-	io_buffer_t*	rx_buf;
-	uint32_t		rx_fifo;
-} USART_IRQ_IO_t;
-
-USART_IRQ_IO_t usart_buf_1;
-USART_IRQ_IO_t usart_buf_2;
-USART_IRQ_IO_t usart_buf_6;
+/*!<
+ * IRQ variables
+ * */  // TODO: linker alloc
+io_buffer_t* USART_buffer[4];	// [3] -> USART6
 
 
-/*!< irq handlers */
-void USART_irq_handler(USART_t* usart, USART_IRQ_IO_t* io) {
-	if(usart->SR & 0x00000020UL && io->rx_buf->ptr) {
-		((uint8_t*)io->rx_buf->ptr)[io->rx_buf->i] = usart->DR;
-		io->rx_buf->i++;
-		if (io->rx_buf->i == io->rx_buf->size) {  // this is assuming that 'i' never skips
-			if (io->rx_fifo) { io->rx_buf->i = 0; return; }	// reset offset
-			usart->CR1 &= ~0x00000020UL;					// turn off irq
+/*!<
+ * IRQ handler
+ * */
+static _FINLINE void USART_IRQ_handler(USART_t* usart, io_buffer_t* io) {
+	if (!io) { return; }
+	if (usart->SR & 0x00000020UL && io->ien && io->ptr) {
+		((uint8_t*)io->ptr)[io->i++] = (_IO uint8_t)usart->DR;
+		if (io->i == io->size) {					// this is assuming that 'i' is never changed otherwise
+			if (io->fifo) { io->i = 0; return; }	// reset offset
+			usart->CR1 &= ~0x00000020UL;			// turn off IRQ
 		}
 	}
 	// TODO: other events
+
 }
 
-extern void USART1_IRQHandler(void) { USART_irq_handler(USART1, &usart_buf_1); }
-extern void USART2_IRQHandler(void) { USART_irq_handler(USART2, &usart_buf_2); }
-extern void USART6_IRQHandler(void) { USART_irq_handler(USART6, &usart_buf_6); }
+void USART1_handler() { USART_IRQ_handler(USART1, USART_buffer[0]); }
+void USART2_handler() { USART_IRQ_handler(USART2, USART_buffer[1]); }
+void USART3_handler() { USART_IRQ_handler(USART3, USART_buffer[2]); }
+void USART6_handler() { USART_IRQ_handler(USART6, USART_buffer[3]); }
 
 
-/*!< irq */
-//void start_USART_read_irq(USART_TypeDef* usart, io_buffer_t* buffer, uint8_t fifo) {
+/*!<
+ * irq
+ * */
+//void start_USART_read_irq(USART_TypeDef* usart, io_buffer_t* buffer) {
 //	usart->CR1 |= USART_CR1_RXNEIE;
 //	uint32_t irqn;
 //	USART_IRQ_IO_t* usart_buf;

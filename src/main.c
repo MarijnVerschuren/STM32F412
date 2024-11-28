@@ -17,7 +17,7 @@
 volatile uint16_t angle = 0;
 
 
-void TIM1_update_handler(void) {
+void TIM1_UP_TIM10_handler(void) {
 	TIM1->SR &= ~0x00000001UL;
 }
 
@@ -91,13 +91,13 @@ void main(void) {
 
 	/*!< SPI */
 	config_GPIO(GPIOA, 4, GPIO_output);
+	GPIO_write(GPIOA, 4, 1);
 	config_SPI_slave(//config_SPI_master(
 		SPI1_SCK_A5, SPI1_MOSI_A7, SPI1_MISO_A6,
 		SPI_ENDIANNESS_MSB | SPI_CPHA_FIRST_EDGE |
 		SPI_CPOL_LOW | SPI_MODE_DUPLEX | SPI_FRAME_MOTOROLA |
 		SPI_DATA_8 | SPI_FIFO_TH_HALF
 	);
-	GPIO_write(GPIOA, 4, 1);
 
 	RTC_timestamp_t test = UNIX_BCD(1735689599);
 	//uint32_t ts = 1726832418;
@@ -116,7 +116,10 @@ void main(void) {
 	start_TIM(TIM1);
 	uint16_t targets[4] =	{1000, 4000, 150, 2050};
 	uint16_t times[4] =		{1000, 500, 700, 2000};
-	uint8_t i = 0;
+	_IO uint8_t i = 0;
+
+	io_buffer_t* SPI1_RX = init_io_buffer(64, 1, 0, 1);
+	start_SPI_read8_IRQ(SPI1, SPI1_RX);
 
 	delay_ms(1000);
 	while (1) {
@@ -124,11 +127,14 @@ void main(void) {
 		//delay_ms(angle / 10);
 		//delay_ms(100);
 		//GPIO_toggle(GPIOC, 13);
-		//GPIO_write(GPIOA, 4, 0);
-		SPI_master_write8(SPI1, (void*)&targets[i], 2, 10);
-		delay_ms(times[i]);
-		i = (i + 1) % 4;
+		(void)i;
+		// GPIO_write(GPIOA, 4, 0);
+		// SPI_write8(SPI1, (void*)&targets[i], 2, 10);
+		// GPIO_write(GPIOA, 4, 1);
+		// delay_ms(times[i]);
+		// i = (i + 1) % 4;
+
 		//SPI_master_read8(SPI1, (void*)&rx, 8, 10);
-		//GPIO_write(GPIOA, 4, 1);
 	}
 }
+// https://stackoverflow.com/questions/38695895/override-a-weak-function-a-with-a-function-b

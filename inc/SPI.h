@@ -6,6 +6,7 @@
 #define STM32F412_SPI_H
 #include "periph.h"
 #include "GPIO.h"
+#include "NVIC.h"
 #include "sys.h"
 
 
@@ -109,8 +110,11 @@ void fconfig_SPI_master(SPI_GPIO_t sck, SPI_GPIO_t mosi, SPI_GPIO_t miso, uint32
 void config_SPI_master(SPI_GPIO_t sck, SPI_GPIO_t mosi, SPI_GPIO_t miso, uint32_t flags);
 void fconfig_SPI_slave(SPI_GPIO_t sck, SPI_GPIO_t mosi, SPI_GPIO_t miso, uint32_t flags, uint16_t crc_poly);
 void config_SPI_slave(SPI_GPIO_t sck, SPI_GPIO_t mosi, SPI_GPIO_t miso, uint32_t flags);
-
-uint32_t SPI_master_write8(SPI_t* spi, const uint8_t* buffer, uint32_t size, uint32_t timeout);
-uint32_t SPI_master_read8(SPI_t* spi, uint8_t* buffer, uint32_t size, uint32_t timeout);
+/*!< usage */
+uint32_t SPI_write8(SPI_t* spi, const uint8_t* buffer, uint32_t size, uint32_t timeout);
+uint32_t SPI_read8(SPI_t* spi, uint8_t* buffer, uint32_t size, uint32_t timeout);
+/*!< IRQ */
+void start_SPI_read8_IRQ(SPI_t* spi, io_buffer_t* buffer);
+void stop_SPI_read8_IRQ(SPI_t* spi);
 
 #endif //STM32F412_SPI_H

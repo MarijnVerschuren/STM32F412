@@ -57,6 +57,7 @@ link_directories(
 # list of modules to build final firmware
 add_executable(${PROJECT_NAME}
         src/vector.S
+        src/syscalls.S
         src/startup.S
         src/sys.S
         src/base.S
@@ -77,6 +78,7 @@ add_executable(${PROJECT_NAME}
         lib/AS5600/AS5600.c
         src/ADC.c
         src/SPI.c
+        src/base.c
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -84,7 +86,7 @@ target_link_libraries(${PROJECT_NAME}
         -T${LINKER_SCRIPT}
         -nostartfiles
         m
-        # -nostdlib
+        -nostdlib
 )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY LINK_DEPENDS ${CMAKE_SOURCE_DIR}/${LINKER_SCRIPT})

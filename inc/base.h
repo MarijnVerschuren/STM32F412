@@ -20,6 +20,8 @@ typedef unsigned long long	uint64_t;
 #define _O	volatile
 #define _IO	volatile
 
+#define _FINLINE __attribute__((always_inline))
+
 #define NULL ((void*)0x00000000UL)
 
 typedef enum {
@@ -40,12 +42,23 @@ typedef struct {
 } dev_pin_t;  // 32 bit
 
 typedef struct {
-	volatile void*		ptr;
-	uint32_t			size;
-	volatile uint32_t	i;	// write
-	volatile uint32_t	o;	// read
-} io_buffer_t;
+	_IO	void*		ptr;			// buffer
+	_IO uint32_t	i	: 31;		// write
+		uint32_t	ien	: 1;		// buffer input mode
+	_IO uint32_t	o	: 31;		// read
+		uint32_t	oen : 1;		// buffer output mode
+		uint32_t	size: 31;		// buffer size
+		uint32_t	fifo: 1;		// fifo mode (ien only)
+} io_buffer_t;	// 128 bit
 
+
+/*<! sys */
+extern _IO uint32_t heap_end;
+extern void* malloc(uint32_t);
+extern void* calloc(uint32_t);
+/*<! io buffer */
+io_buffer_t* init_io_buffer(uint32_t size, uint8_t ien, uint8_t oen, uint8_t fifo);
+/*<! dev id */
 extern void* id_to_dev(uint32_t id);	// only uses: clk, periph
 extern uint32_t dev_to_id(void* dev);	// only writes: clk, periph
 extern void enable_id(uint32_t id);
