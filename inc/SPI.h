@@ -101,20 +101,20 @@ typedef enum {
 	SPI_DATA_16	=			0x0F000000UL,
 	// FIFO
 	SPI_FIFO_TH_HALF =		0x00000000UL,
-	SPI_FIFO_TH_QUARTER =	0x10000000UL
+	SPI_FIFO_TH_QUARTER =	0x10000000UL,
 } SPI_flag_t;
 
 
 /*!< init / enable / disable */
 void fconfig_SPI_master(SPI_GPIO_t sck, SPI_GPIO_t mosi, SPI_GPIO_t miso, uint32_t flags, uint16_t crc_poly);
 void config_SPI_master(SPI_GPIO_t sck, SPI_GPIO_t mosi, SPI_GPIO_t miso, uint32_t flags);
-void fconfig_SPI_slave(SPI_GPIO_t sck, SPI_GPIO_t mosi, SPI_GPIO_t miso, uint32_t flags, uint16_t crc_poly);
-void config_SPI_slave(SPI_GPIO_t sck, SPI_GPIO_t mosi, SPI_GPIO_t miso, uint32_t flags);
+void fconfig_SPI_slave(SPI_GPIO_t nss, SPI_GPIO_t sck, SPI_GPIO_t mosi, SPI_GPIO_t miso, uint32_t flags, uint16_t crc_poly);
+void config_SPI_slave(SPI_GPIO_t nss, SPI_GPIO_t sck, SPI_GPIO_t mosi, SPI_GPIO_t miso, uint32_t flags);
 /*!< usage */
 uint32_t SPI_write8(SPI_t* spi, const uint8_t* buffer, uint32_t size, uint32_t timeout);
 uint32_t SPI_read8(SPI_t* spi, uint8_t* buffer, uint32_t size, uint32_t timeout);
 /*!< IRQ */
-void start_SPI_read8_IRQ(SPI_t* spi, io_buffer_t* buffer);
+void start_SPI_read8_IRQ(SPI_t* spi, io_buffer_t* buffer, uint8_t priority);
 void stop_SPI_read8_IRQ(SPI_t* spi);
 
 #endif //STM32F412_SPI_H

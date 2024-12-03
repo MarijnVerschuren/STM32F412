@@ -18,11 +18,12 @@
 .section .text.NVIC_enable_IRQ
 .type NVIC_enable_IRQ, %function
 NVIC_enable_IRQ:
-	lsr r1, r0, #5				// byte index in the ISER register
+	lsr r1, r0, #5				// word index in the ISER register
 	and r0, r0, #0x1F			// bit	index in the ISER register
 	mov r2, #1					// load bit
 	lsl r0, r2, r0				// shift bit
 	ldr ip, =NVIC_BASE			// load NVIC base into IP
+	add ip, ip, r1, lsl 2		// add word index to IP
 	str r0, [ip, NVIC_ISER]		// set IRQ enable bit
 	bx lr						// return
 .size NVIC_enable_IRQ, .-NVIC_enable_IRQ
@@ -32,11 +33,12 @@ NVIC_enable_IRQ:
 .section .text.NVIC_disable_IRQ
 .type NVIC_disable_IRQ, %function
 NVIC_disable_IRQ:
-	lsr r1, r0, #5				// byte index in the ICER register
+	lsr r1, r0, #5				// word index in the ICER register
 	and r0, r0, #0x1F			// bit	index in the ICER register
 	mov r2, #1					// load bit
 	lsl r0, r2, r0				// shift bit
 	ldr ip, =NVIC_BASE			// load NVIC base into IP
+	add ip, ip, r1, lsl 2		// add word index to IP
 	str r0, [ip, NVIC_ICER]		// set IRQ enable bit
 	dsb	sy						// wait until write complete
 	isb	sy						// wait until the CPU pipeline is clear
