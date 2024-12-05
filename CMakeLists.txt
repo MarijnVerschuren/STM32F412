@@ -72,13 +72,14 @@ add_executable(${PROJECT_NAME}
         src/RTC.c
         src/I2C.c
         src/tim.c
+        src/ADC.c
+        src/SPI.c
+        src/base.c
 
         test/test.S
 
         lib/AS5600/AS5600.c
-        src/ADC.c
-        src/SPI.c
-        src/base.c
+        lib/DW1000/DW1000.c
 )
 
 target_link_libraries(${PROJECT_NAME}

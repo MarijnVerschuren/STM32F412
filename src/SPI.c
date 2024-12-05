@@ -105,7 +105,14 @@ uint32_t SPI_read8(SPI_t* spi, uint8_t* buffer, uint32_t size, uint32_t timeout)
 	spi->CR1 |= 0x00000040UL;
 	uint64_t start = tick;
 	uint32_t i = 0;
+
+	while (spi->SR & 0x00000001UL) {
+		(void)(_IO uint8_t)spi->DR;  // flush buffer
+	}
+
 	for (; i < size; i++) {
+		while (!(spi->SR & 0x00000002UL))	{ if ( tick - start > timeout) { goto SPI_master_read8_end; } }
+		spi->DR = 0;
 		while (!(spi->SR & 0x00000001UL))	{ if ( tick - start > timeout) { goto SPI_master_read8_end; } }
 		buffer[i] = (_IO uint8_t)spi->DR;
 	}

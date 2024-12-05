@@ -9,43 +9,14 @@
 #include "tim.h"
 #include "SPI.h"
 
-#include "AS5600/AS5600.h"
+#include "DW1000/DW1000.h"
 
 
-volatile uint16_t angle = 0;
-
-
-void TIM1_UP_TIM10_handler(void) {
-	TIM1->SR &= ~0x00000001UL;
-}
-
-void RTC_stamp_handler(void) {
-	EXTI->PR = 0x00200000UL;
-	uint32_t ts = RTC_unix();
-	USART_write(USART1, &ts, 4, 100);
-	return;
-}
-
-void EXTI5_9_handler(void) {
-	EXTI->PR = 0x00000001UL;
-	return;
-}
-
-
-void ADC_handler(void) {
-	uint8_t status = ADC1->SR;
-	ADC1->SR = ~status;
-	if (status & 0b000001) {
-		return;  // watchdog
-	} if (status & 0b000010) {
-		return;  // EOC
-	} if (status & 0b000100) {
-		uint32_t a = ADC1->JDR1;
-		angle = a + (a / 4);
-		return;  // JEOC
-	} if (status & 0b10000) {
-		return;  // OVR
-	}
+/*!<
+ * IRQ
+ * */
+void EXTI2_handler(void) {
+	EXTI->PR = 0x00000004UL;
 }
 
 
@@ -62,59 +33,57 @@ void main(void) {
 	sys_init();															// write settings
 
 	// GPIO
-	config_GPIO(GPIOA, 8, GPIO_output | GPIO_no_pull | GPIO_push_pull);
-	config_GPIO(GPIOC, 13, GPIO_output | GPIO_no_pull | GPIO_push_pull);
+	config_GPIO(GPIOA, 3, GPIO_output | GPIO_no_pull | GPIO_push_pull);
+	config_GPIO(GPIOA, 4, GPIO_output | GPIO_no_pull | GPIO_push_pull);
 
 	// EXTI TODO: flags??
-	//config_EXTI_GPIO(GPIOA, 0, 0, 1);
-	//NVIC_set_IRQ_priority(EXTI0_IRQn, 0);
-	//start_EXTI(0);
+	config_EXTI_GPIO(GPIOA, 2, 1, 1);
+	NVIC_set_IRQ_priority(EXTI2_IRQn, 0);
 
 	// ADC
-	config_ADC(ADC_CLK_DIV2 | ADC_INJ_DISC | ADC_RES_12B | ADC_EOC_SINGLE | ADC_INJ_TRIG_TIM1_TRGO | ADC_INJ_TRIG_MODE_RISING);
-	config_ADC_watchdog(0, ADC_WDG_TYPE_INJECTED, 200, 3900);
-	config_ADC_IRQ(1, ADC_IRQ_JEOC | ADC_IRQ_WDG);
-	config_ADC_GPIO_inj_channel(GPIOA, 0, ADC_SAMPLE_28_CYCLES, 409, 0);
+	//config_ADC(ADC_CLK_DIV2 | ADC_INJ_DISC | ADC_RES_12B | ADC_EOC_SINGLE | ADC_INJ_TRIG_TIM1_TRGO | ADC_INJ_TRIG_MODE_RISING);
+	//config_ADC_watchdog(0, ADC_WDG_TYPE_INJECTED, 200, 3900);
+	//config_ADC_IRQ(1, ADC_IRQ_JEOC | ADC_IRQ_WDG);
+	//config_ADC_GPIO_inj_channel(GPIOA, 0, ADC_SAMPLE_28_CYCLES, 409, 0);
 
 	// TIM
-	config_TIM_master(TIM1, 10000, 100, TIM_TRGO_UPDATE);  // 100 Hz
-	start_TIM_update_irq(TIM1);
-	// TODO: is it possible to combine PWM and UPDATE triggers to make sure move and read are not done psudo-simultanuisly
+	//config_TIM_master(TIM1, 10000, 100, TIM_TRGO_UPDATE);  // 100 Hz
+	//start_TIM_update_irq(TIM1);
 
 	// USART
-	config_UART(USART1_TX_A9, USART1_RX_A10, 115200);
+	//config_UART(USART1_TX_A9, USART1_RX_A10, 115200);
 
 	// I2C
-	config_I2C(I2C2_B10_SCL, I2C2_B9_SDA, 0x00);
+	//config_I2C(I2C2_B10_SCL, I2C2_B9_SDA, 0x00);
 
 	/*!< SPI */
-	config_GPIO(GPIOA, 4, GPIO_output);
 	GPIO_write(GPIOA, 4, 1);
 	config_SPI_master(
 		SPI1_SCK_A5, SPI1_MOSI_A7, SPI1_MISO_A6,
 		SPI_ENDIANNESS_MSB | SPI_CPHA_FIRST_EDGE |
 		SPI_CPOL_LOW | SPI_MODE_DUPLEX | SPI_FRAME_MOTOROLA |
-		SPI_FIFO_TH_HALF | SPI_DATA_8 | SPI_CLK_DIV_4
+		SPI_FIFO_TH_HALF | SPI_DATA_8 | SPI_CLK_DIV_16
 	);
 
-	RTC_timestamp_t test = UNIX_BCD(1735689599);
+	// RTC
+	//RTC_timestamp_t test = UNIX_BCD(1735689599);
 	//uint32_t ts = 1726832418;
 	//uconfig_RTC(ts, RTC_WAKEUP_DISABLE, RTC_WAKEUP_DIV16, 0x0000U);
 	//config_RTC_ext_ts(1U, RTC_TS_POLARITY_RISING);
 
-	/*!< test apps */
-	//while (config_AS5600(
-	//	I2C2, AS5600_POW_NOM | AS5600_HYST_2LSB | AS5600_MODE_REDUCED_ANALOG |
-	//	AS5600_SFILTER_2 | AS5600_FFILTER_10LSB | AS5600_WDG_ON, 10
-	//)) { delay_ms(10); }
-	//volatile uint8_t stat = AS5600_get_status(I2C2, 10);
+	DW1000_t dw1000 = {
+		.spi = SPI1,
+		.NSS_port = GPIOA,
+		.NSS_pin = 4,
+		.NRST_port = GPIOA,
+		.NRST_pin = 3
+	};
+	/*!< test */
+	DW1000_init(&dw1000);
 
 
-	start_ADC(0, 1);
-	start_TIM(TIM1);
-	uint16_t targets[4] =	{1000, 4000, 150, 2050};
-	uint16_t times[4] =		{1000, 500, 700, 2000};
+	while (1) {
 
-	while (1) {}
+	}
 }
 // https://stackoverflow.com/questions/38695895/override-a-weak-function-a-with-a-function-b
