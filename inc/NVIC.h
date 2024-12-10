@@ -12,16 +12,16 @@
  * */
 typedef enum {
 	/*!<	[ARM Cortex-M4 interrupts]		*/
-	IRQn_reset		= -15,
-	IRQn_NMI		= -14,
-	IRQn_hard_fault	= -13,
-	IRQn_mem_fault	= -12,
-	IRQn_bus_fault	= -11,
-	IRQn_exception	= -10,
-	IRQn_SVC		= -5,
-	IRQn_debug		= -4,
-	IRQn_pending_SV	= -2,
-	IRQn_sys_tick	= -1,
+	IRQn_reset					= -15,
+	IRQn_NMI					= -14,
+	IRQn_hard_fault				= -13,
+	IRQn_mem_fault				= -12,
+	IRQn_bus_fault				= -11,
+	IRQn_exception				= -10,
+	IRQn_SVC					= -5,
+	IRQn_debug					= -4,
+	IRQn_pending_SV				= -2,
+	IRQn_sys_tick				= -1,
 	/*!<	[STM32 interrupts]				*/
 	WWDG_IRQn                   = 0,      /*!< Window WatchDog Interrupt                                         */
 	PVD_IRQn                    = 1,      /*!< PVD through EXTI Line detection Interrupt                         */

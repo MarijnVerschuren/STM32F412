@@ -76,14 +76,16 @@ void main(void) {
 		.NSS_port = GPIOA,
 		.NSS_pin = 4,
 		.NRST_port = GPIOA,
-		.NRST_pin = 3
+		.NRST_pin = 3,
+		.tx = 1
 	};
 	/*!< test */
 	DW1000_init(&dw1000);
-
+	DW1000_config(&dw1000, &dw1000_cfg);
 
 	while (1) {
-
+		DW1000_initiator(&dw1000);
+		//DW1000_responder(&dw1000);
 	}
 }
 // https://stackoverflow.com/questions/38695895/override-a-weak-function-a-with-a-function-b

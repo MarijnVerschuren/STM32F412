@@ -25,7 +25,6 @@ IVT:
 .word 0
 .word pending_SV_handler
 .word sys_tick_handler
-// TODO: more interrupts
 .word WWDG_handler
 .word PVD_handler
 .word RTC_stamp_handler
