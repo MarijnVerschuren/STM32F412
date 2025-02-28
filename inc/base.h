@@ -51,13 +51,20 @@ typedef struct {
 		uint32_t	fifo: 1;		// fifo mode (ien only)
 } io_buffer_t;	// 128 bit
 
+typedef enum {
+	IO_BUFFER_IEN =		0b001U,
+	IO_BUFFER_OEN =		0b010U,
+	IO_BUFFER_FIFO =	0b100U
+} io_buffer_flag_t;
+
 
 /*<! sys */
 extern _IO uint32_t heap_end;
 extern void* malloc(uint32_t);
 extern void* calloc(uint32_t);
 /*<! io buffer */
-io_buffer_t* init_io_buffer(uint32_t size, uint8_t ien, uint8_t oen, uint8_t fifo);
+io_buffer_t* init_io_buffer(uint32_t size, uint8_t flags);
+
 /*<! dev id */
 extern void* id_to_dev(uint32_t id);	// only uses: clk, periph
 extern uint32_t dev_to_id(void* dev);	// only writes: clk, periph

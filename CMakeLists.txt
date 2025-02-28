@@ -76,7 +76,7 @@ add_executable(${PROJECT_NAME}
         src/SPI.c
         src/base.c
 
-        test/test.S
+        test/fn.S
 
         lib/AS5600/AS5600.c
         lib/DW1000/DW1000.c

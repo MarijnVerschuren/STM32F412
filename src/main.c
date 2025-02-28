@@ -9,7 +9,7 @@
 #include "tim.h"
 #include "SPI.h"
 
-#include "DW1000/DW1000.h"
+#include "fn.h"
 
 
 /*!<
@@ -23,8 +23,8 @@ void EXTI2_handler(void) {
 // application
 void main(void) {
 	set_SYS_hardware_config(PWR_LVL_NOM, 25000000);						// 3v3, HSE@25MHz
-	set_SYS_oscilator_config(0, 1, 0, 1, 1, 0, 0, 0, 0);				// enable HSE, LSE, CSS and the backup-domain
-	//set_SYS_oscilator_config(0, 1, 0, 0, 1, 0, 0, 0, 0);				// enable HSE, CSS and the backup-domain
+	//set_SYS_oscilator_config(0, 1, 0, 1, 1, 0, 0, 0, 0);				// enable HSE, LSE, CSS and the backup-domain
+	set_SYS_oscilator_config(0, 1, 0, 0, 1, 0, 0, 0, 0);				// enable HSE, CSS and the backup-domain
 	set_SYS_PLL_config(PLL_CLK_SRC_HSE, 12U, 96U, PLL_P_DIV_4, 0, 0);	// enable PLL @ 25MHz / 12 * 96 / 2 -> 100MHz
 	//set_SYS_backup_domain_config();									// enable backup domain
 	//set_SYS_RTC_config(RTC_SRC_LSE, 0U);								// enable RTC
@@ -64,27 +64,21 @@ void main(void) {
 		SPI_CPOL_LOW | SPI_MODE_DUPLEX | SPI_FRAME_MOTOROLA |
 		SPI_FIFO_TH_HALF | SPI_DATA_8 | SPI_CLK_DIV_16
 	);
-
+	io_buffer_t* buffer = init_io_buffer(64, IO_BUFFER_FIFO | IO_BUFFER_IEN);
 	// RTC
 	//RTC_timestamp_t test = UNIX_BCD(1735689599);
 	//uint32_t ts = 1726832418;
 	//uconfig_RTC(ts, RTC_WAKEUP_DISABLE, RTC_WAKEUP_DIV16, 0x0000U);
 	//config_RTC_ext_ts(1U, RTC_TS_POLARITY_RISING);
 
-	DW1000_t dw1000 = {
-		.spi = SPI1,
-		.NSS_port = GPIOA,
-		.NSS_pin = 4,
-		.NRST_port = GPIOA,
-		.NRST_pin = 3,
-		.tx = 1
-	};
-	/*!< test */
-	DW1000_init(&dw1000);
-	DW1000_config(&dw1000, &dw1000_cfg);
+	uint8_t buf[20];
+	for (uint8_t i = 0; i < 20; i++) { buf[i] = i; }
 
-	while (1) {
-		DW1000_initiator(&dw1000);
+	for (;;) {
+		GPIO_write(GPIOA, 4, 0);
+		SPI_write8(SPI1, &buf, 20, 20);
+		GPIO_write(GPIOA, 4, 1);
+		delay_ms(10);
 		//DW1000_responder(&dw1000);
 	}
 }

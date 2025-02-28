@@ -5,6 +5,7 @@
 #include "memory_map.h"	// define include
 
 // functions
+.global init_io_buffer
 .global id_to_dev
 .global dev_to_id
 .global enable_id
@@ -13,10 +14,35 @@
 .global disable_dev
 
 
-
 /*!<
  * functions
  * */
+// io_buffer_t* init_io_buffer(uint32_t size, uint8_t flags);
+.section .text.init_io_buffer
+.type init_io_buffer, %function
+init_io_buffer:
+	push {r4-r6, lr}			// push non-volatile registers
+	mov r4, r0					// r4: size
+	mov r5, r1					// r5: flags
+	bl calloc					// allocate buffer
+	mov r6, r0					// r6: ptr
+	mov r0, #16					// sizeof(io_buffer_t)
+	bl calloc					// allocate buffer
+	str r6, [r0]				// buffer->ptr
+	lsl r1, r5, #31				// shift to ien flag
+	lsl r2, r5, #30				// shift to oen flag
+	lsl r3, r5, #29				// shift to fifo flag
+	and r1, r1, #0x80000000		// ien flag
+	and r2, r2, #0x80000000		// oen flag
+	and r3, r3, #0x80000000		// fifo flag
+	orr r3, r3, r4				// add size
+	add r4, r0, #4				// add offset
+	stm r4, {r1-r3}				// store data
+	pop {r4-r6, lr}				// restore non-volatile registers
+	bx lr						// return
+.size init_io_buffer, .-init_io_buffer
+
+
 // void* id_to_dev(uint32_t id);
 .section .text.id_to_dev
 .type id_to_dev, %function
