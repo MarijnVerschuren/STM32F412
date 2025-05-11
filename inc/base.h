@@ -21,6 +21,7 @@ typedef unsigned long long	uint64_t;
 #define _IO	volatile
 
 #define _FINLINE __attribute__((always_inline))
+#define _NOP() __asm volatile ("nop")
 
 #define NULL ((void*)0x00000000UL)
 
@@ -64,6 +65,9 @@ extern void* malloc(uint32_t);
 extern void* calloc(uint32_t);
 /*<! io buffer */
 io_buffer_t* init_io_buffer(uint32_t size, uint8_t flags);
+// TODO: with fifo size will be wrong (base.S)
+extern uint32_t in_available(io_buffer_t* buffer);
+extern uint32_t out_available(io_buffer_t* buffer);
 
 /*<! dev id */
 extern void* id_to_dev(uint32_t id);	// only uses: clk, periph

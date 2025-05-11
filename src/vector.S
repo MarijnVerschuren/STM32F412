@@ -67,7 +67,7 @@ IVT:
 .word USART3_handler
 .word EXTI15_10_handler
 .word RTC_ALARM_handler
-.word OTG_FS_WKUP_handler
+.word USB_WKUP_handler
 .word TIM8_BRK_TIM12_handler
 .word TIM8_UP_TIM13_handler
 .word TIM8_TRG_COM_TIM14_handler
@@ -92,7 +92,7 @@ IVT:
 .word CAN2_RX0_handler
 .word CAN2_RX1_handler
 .word CAN2_SCE_handler
-.word OTG_FS_handler
+.word USB_handler
 .word DMA2_Stream5_handler
 .word DMA2_Stream6_handler
 .word DMA2_Stream7_handler
@@ -250,6 +250,8 @@ default_handler:
 .thumb_set EXTI15_10_handler,			default_handler
 .weak RTC_ALARM_handler
 .thumb_set RTC_ALARM_handler,			default_handler
+.weak USB_WKUP_handler
+.thumb_set USB_WKUP_handler,			default_handler
 .weak OTG_FS_WKUP_handler
 .thumb_set OTG_FS_WKUP_handler,			default_handler
 .weak TIM8_BRK_TIM12_handler

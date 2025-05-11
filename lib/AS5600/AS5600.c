@@ -21,7 +21,7 @@ uint8_t AS5600_get_status(I2C_t* i2c, uint16_t timeout) {
 
 uint16_t AS5600_get_angle(I2C_t* i2c, uint16_t timeout) {
 	uint16_t angle = 0;
-	I2C_master_read_reg(i2c, AS5600_ADDRESS, AS5600_REGISTER_ANGLE, &angle, 2, timeout);
+	I2C_master_read_reg(i2c, AS5600_ADDRESS, AS5600_REGISTER_ANGLE, (void*)&angle, 2, timeout);
 	return (angle >> 8) | (angle << 8);
 }
 

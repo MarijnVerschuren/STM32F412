@@ -59,7 +59,12 @@
 #define RCC						((RCC_t*)RCC_BASE)
 #define FLASH					((FLASH_t*)FLASH_BASE)
 
+
 /*!< AHB2 peripherals */
+
+
+/*!< USB peripherals */
+#define USB_OTG_FS						((USB_OTG_GlobalTypeDef*)USB_OTG_DEVICE_BASE)
 
 
 /*!<
@@ -165,7 +170,7 @@ typedef struct {
 		uint32_t	_7;				/*                                   0x88 */
 	_IO uint32_t	DCKCFGR;		/* dedicated clocks configuration    0x8C */
 	_IO uint32_t	CKGATENR;		/* clocks gated enable               0x90 */
-	_IO uint32_t	DCKCFGR1;		/* dedicated clocks configuration 1  0x94 */
+	_IO uint32_t	DCKCFGR2;		/* dedicated clocks configuration 1  0x94 */
 } RCC_t;
 
 /*!< SYSCFG */
@@ -325,6 +330,117 @@ typedef struct {
 	_IO uint32_t TRISE;				/* TRISE                             0x20 */
 	_IO uint32_t FLTR;				/* FLTR                              0x24 */
 } I2C_t;
+
+
+/*!<
+ * USB systems
+ * */
+/*!< USB global */
+typedef struct {
+	_IO uint32_t GOTGCTL;			/* OTG control and status            0x00 */
+	_IO uint32_t GOTGINT;			/* OTG interrupt                     0x04 */
+	_IO uint32_t GAHBCFG;			/* AHB configuration                 0x08 */
+	_IO uint32_t GUSBCFG;			/* USB configuration                 0x0C */
+	_IO uint32_t GRSTCTL;			/* reset control                     0x10 */
+	_IO uint32_t GINTSTS;			/* interrupt                         0x14 */
+	_IO uint32_t GINTMSK;			/* interrupt mask                    0x18 */
+	_IO uint32_t GRXSTSR;			/* receive status queue read         0x1C */
+	_IO uint32_t GRXSTSP;			/* receive status queue read & pop   0x20 */
+	_IO uint32_t GRXFSIZ;			/* receive FIFO size                 0x24 */
+	_IO uint32_t DIEPTXF0_HNPTXFSIZ;/* EP0/non periodic tx-FIFO size     0x28 */
+	_IO uint32_t HNPTXSTS;			/* non periodic tx-FIFO/queue status 0x2C */
+		uint32_t _0[2];				/*                              0x30-0x34 */
+	_IO uint32_t GCCFG;				/* GPIO config                       0x38 */
+	_IO uint32_t CID;				/* user ID                           0x3C */
+		uint32_t _1[3];				/*                              0x40-0x48 */
+	_IO uint32_t GHWCFG3;			/* user HW config 3                  0x4C */
+		uint32_t _2;				/*                                   0x50 */
+	_IO uint32_t GLPMCFG;			/* LPM register                      0x54 */
+		uint32_t _3;				/*                                   0x58 */
+	_IO uint32_t GDFIFOCFG;			/* DFIFO software config register    0x5C */
+		uint32_t _4[40];			/*                              0x60-0xFC */
+	_IO uint32_t HPTXFSIZ;			/* host periodic tx-FIFO size       0x100 */
+	_IO uint32_t DIEPTXF[0x0F];		/* dev periodic tx-FIFO             0x104 */
+} USB_OTG_GlobalTypeDef;
+
+/*!< USB device */
+typedef struct {
+	_IO uint32_t DCFG;				/* configuration                     0x00 */
+	_IO uint32_t DCTL;				/* control                           0x04 */
+	_I	uint32_t DSTS;				/* status                            0x08 */
+		uint32_t _0;				/*                                   0x0C */
+	_IO uint32_t DOEPMSK;			/* IEP mask                          0x10 */
+	_IO uint32_t DIEPMSK;			/* OEP mask                          0x14 */
+	_IO uint32_t DAINT;				/* endpoint interrupt                0x18 */
+	_IO uint32_t DAINTMSK;			/* endpoint interrupt mask           0x1C */
+		uint32_t _1[2];				/*                              0x20-0x24 */
+	_IO uint32_t DVBUSDIS;			/* VBUS discharge                    0x28 */
+	_IO uint32_t DVBUSPULSE;		/* VBUS pulse                        0x2C */
+	_IO uint32_t DTHRCTL;			/* threshold                         0x30 */
+	_IO uint32_t DIEPEMPMSK;		/* IEP empty mask                    0x34 */
+	_IO uint32_t DEACHINT;			/* dedicated EP interrupt            0x38 */
+	_IO uint32_t DEACHMSK;			/* dedicated EP mask                 0x3C */
+		uint32_t _2;				/*                                   0x40 */
+	_IO uint32_t DINEP1MSK;			/* dedicated IEP1 mask               0x44 */
+		uint32_t _3[15];			/*                              0x44-0x7C */
+	_IO uint32_t DOUTEP1MSK;		/* dedicated OEP1 mask               0x84 */
+} USB_OTG_DeviceTypeDef;
+
+/*!< USB endpoint */
+typedef struct{
+  _IO uint32_t DIEPCTL;           /*!< dev IN Endpoint Control Reg    900h + (ep_num * 20h) + 00h */
+  uint32_t Reserved04;             /*!< Reserved                       900h + (ep_num * 20h) + 04h */
+  _IO uint32_t DIEPINT;           /*!< dev IN Endpoint Itr Reg        900h + (ep_num * 20h) + 08h */
+  uint32_t Reserved0C;             /*!< Reserved                       900h + (ep_num * 20h) + 0Ch */
+  _IO uint32_t DIEPTSIZ;          /*!< IN Endpoint Txfer Size         900h + (ep_num * 20h) + 10h */
+  _IO uint32_t DIEPDMA;           /*!< IN Endpoint DMA Address Reg    900h + (ep_num * 20h) + 14h */
+  _IO uint32_t DTXFSTS;           /*!< IN Endpoint Tx FIFO Status Reg 900h + (ep_num * 20h) + 18h */
+  uint32_t Reserved18;             /*!< Reserved  900h+(ep_num*20h)+1Ch-900h+ (ep_num * 20h) + 1Ch */
+} USB_OTG_INEndpointTypeDef;
+
+typedef struct{
+  _IO uint32_t DOEPCTL;       /*!< dev OUT Endpoint Control Reg           B00h + (ep_num * 20h) + 00h */
+  uint32_t Reserved04;         /*!< Reserved                               B00h + (ep_num * 20h) + 04h */
+  _IO uint32_t DOEPINT;       /*!< dev OUT Endpoint Itr Reg               B00h + (ep_num * 20h) + 08h */
+  uint32_t Reserved0C;         /*!< Reserved                               B00h + (ep_num * 20h) + 0Ch */
+  _IO uint32_t DOEPTSIZ;      /*!< dev OUT Endpoint Txfer Size            B00h + (ep_num * 20h) + 10h */
+  _IO uint32_t DOEPDMA;       /*!< dev OUT Endpoint DMA Address           B00h + (ep_num * 20h) + 14h */
+  uint32_t Reserved18[2];      /*!< Reserved B00h + (ep_num * 20h) + 18h - B00h + (ep_num * 20h) + 1Ch */
+} USB_OTG_OUTEndpointTypeDef;
+
+//typedef struct {
+//	_IO uint32_t CTL;				/* control                           0x00 */
+//		uint32_t _0;				/*                                   0x04 */
+//	_IO uint32_t INT;				/* interrupt                         0x08 */
+//		uint32_t _1;				/*                                   0x0C */
+//	_IO uint32_t TSIZ;				/* transfer size                     0x10 */
+//	_IO uint32_t DMA;				/* DMA address                       0x14 */
+//	_IO uint32_t DTXFSTS;			/* tx-FIFO status                    0x18 */
+//		uint32_t _2;				/*                                   0x1C */
+//} USB_EP_t;
+
+
+/*!< USB host */
+typedef struct {
+	_IO uint32_t HCFG;				/* configuration                     0x00 */
+	_IO uint32_t HFIR;				/* frame interval                    0x04 */
+	_IO uint32_t HFNUM;				/* frame number/frame                0x08 */
+		uint32_t _0;				/*                                   0x0C */
+	_IO uint32_t HPTXSTS;			/* periodic tx-FIFO / queue status   0x10 */
+	_IO uint32_t HAINT;				/* all channels interrupt            0x14 */
+	_IO uint32_t HAINTMSK;			/* all channels interrupt mask       0x18 */
+} USB_host_t;
+
+/*!< USB host channel */
+typedef struct {
+	_IO uint32_t HCCHAR;			/* channel characteristics           0x00 */
+	_IO uint32_t HCSPLT;			/* channel split control             0x04 */
+	_IO uint32_t HCINT;				/* channel interrupt                 0x08 */
+	_IO uint32_t HCINTMSK;			/* channel interrupt mask            0x0C */
+	_IO uint32_t HCTSIZ;			/* channel transfer size             0x10 */
+	_IO uint32_t HCDMA;				/* channel DMA address               0x14 */
+		uint32_t _0[2];				/*                                   0x18 */
+} USB_host_channel_t;
 
 
 #endif // STM32F412_PERIPH_H

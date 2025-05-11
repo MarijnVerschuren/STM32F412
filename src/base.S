@@ -12,6 +12,8 @@
 .global disable_id
 .global enable_dev
 .global disable_dev
+.global in_available
+.global out_available
 
 
 /*!<
@@ -147,3 +149,31 @@ disable_dev:
 	bl disable_id
 	bx ip
 .size disable_dev, .-disable_dev
+
+
+// uint32_t in_available(io_buffer_t* buffer);
+.section .text.in_available
+.type in_available, %function
+in_available:
+	add r0, r0, #4		// skip buffer pointer
+	ldmia r0, {r1, r2}	// load I and O offsets
+	bfc r1, #31, #1		// remove mode bit
+	bfc r2, #31, #1		// remove mode bit
+	sub r0, r1, r2		// calculate I - O
+	bx lr
+.size in_available, .-in_available
+
+
+// uint32_t out_available(io_buffer_t* buffer);
+.section .text.out_available
+.type out_available, %function
+out_available:
+	add r0, r0, #4		// skip buffer pointer
+	ldmia r0, {r1, r2}	// load I and O offsets
+	bfc r1, #31, #1		// remove mode bit
+	bfc r2, #31, #1		// remove mode bit
+	sub r0, r2, r1		// calculate O - I
+	bx lr
+.size out_available, .-out_available
+
+

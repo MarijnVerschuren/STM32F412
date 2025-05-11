@@ -26,11 +26,10 @@ add_compile_options(
         $<$<COMPILE_LANGUAGE:CXX>:-fno-rtti>
         $<$<COMPILE_LANGUAGE:CXX>:-fno-use-cxa-atexit>
         $<$<COMPILE_LANGUAGE:CXX>:-fno-threadsafe-statics>
-        $<$<COMPILE_LANGUAGE:CXX>:-Wold-style-cast>
-        $<$<COMPILE_LANGUAGE:CXX>:-Wsuggest-override>
         -fstrict-volatile-bitfields
         -ffunction-sections
 
+        -Wno-incompatible-pointer-types
 #        -Werror
 #        -Wall
 #        -Wextra
@@ -72,9 +71,14 @@ add_executable(${PROJECT_NAME}
         src/RTC.c
         src/I2C.c
         src/tim.c
+        src/pwm.c
         src/ADC.c
         src/SPI.c
-        src/base.c
+
+        src/usb/desc.c
+        src/usb/hid.c
+        src/usb/usb.c
+        src/usb/usb_int.c
 
         test/fn.S
 
@@ -86,7 +90,6 @@ target_link_libraries(${PROJECT_NAME}
         ${CPU_OPTIONS}
         -T${LINKER_SCRIPT}
         -nostartfiles
-        m
         -nostdlib
 )
 

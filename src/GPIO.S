@@ -93,7 +93,7 @@ fconfig_GPIO:
 	push {r0-r3, lr}		// save R0-R3 and LR temporarily
 	bl enable_GPIO			// call enable_GPIO, R0-R2 destroyed
 	ldmia sp, {r0, r1}		// restore R0 and R1 (port, pin)
-	bl reset_GPIO			// call reset_GPIO, R0-R3 destoyed
+	bl reset_GPIO			// call reset_GPIO, R0-R3 destroyed
 	pop {r0-r3, lr}			// restore R0-R3 and LR
 	push {r4-r7}			// save non volatile registers
 	mov ip, r0				// load port ptr to free R0

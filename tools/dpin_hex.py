@@ -26,7 +26,13 @@ ports = {
 }
 
 tims = {
-	"TIM1": ("APB2", 0),     "TIM2": ("APB1", 0)
+	"TIM1": ("APB2", 0),    "TIM8": ("APB2", 1),
+	"TIM9": ("APB2", 16),	"TIM10": ("APB2", 17),
+	"TIM11": ("APB2", 18),	"TIM2": ("APB1", 0),
+	"TIM3": ("APB1", 1),	"TIM4": ("APB1", 2),
+	"TIM5": ("APB1", 3),	"TIM6": ("APB1", 4),
+	"TIM7": ("APB1", 5),	"TIM12": ("APB1", 6),
+	"TIM13": ("APB1", 7),	"TIM14": ("APB1", 8),
 }
 uarts = {
 	"UART1": ("APB2", 4),    "UART2": ("APB1", 17),
@@ -67,7 +73,9 @@ def run(type: str, collection: dict, af: int or None, pnum: int or None) -> None
 			clk, dev = periph
 			clk = clocks[clk]
 			if type in ["TIM"]:
-				channel = max((int(input("channel: ")) - 1), 0)
+				ch = input("channel: ")
+				chn = 4 if "n" in ch else 0
+				channel = max((int(ch.replace("n", "")) + chn - 1), 0)
 				sub |= channel & 0x7
 			
 			alt = int(input("alt: ")) if not af else af

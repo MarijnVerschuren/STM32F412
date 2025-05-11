@@ -66,7 +66,7 @@ typedef enum {
 	USART3_IRQn                 = 39,     /*!< USART3 global Interrupt                                           */
 	EXTI15_10_IRQn              = 40,     /*!< External Line[15:10] Interrupts                                   */
 	RTC_ALARM_IRQn              = 41,     /*!< RTC Alarm (A and B) through EXTI Line Interrupt                   */
-	OTG_FS_WKUP_IRQn            = 42,     /*!< USB OTG FS Wakeup through EXTI line interrupt                     */
+	USB_WKUP_IRQn               = 42,     /*!< USB OTG FS Wakeup through EXTI line interrupt                     */
 	TIM8_BRK_TIM12_IRQn         = 43,     /*!< TIM8 Break Interrupt and TIM12 global interrupt                   */
 	TIM8_UP_TIM13_IRQn          = 44,     /*!< TIM8 Update Interrupt and TIM13 global interrupt                  */
 	TIM8_TRG_COM_TIM14_IRQn     = 45,     /*!< TIM8 Trigger and Commutation Interrupt and TIM14 global interrupt */
@@ -88,7 +88,7 @@ typedef enum {
 	CAN2_RX0_IRQn               = 64,     /*!< CAN2 RX0 Interrupt                                                */
 	CAN2_RX1_IRQn               = 65,     /*!< CAN2 RX1 Interrupt                                                */
 	CAN2_SCE_IRQn               = 66,     /*!< CAN2 SCE Interrupt                                                */
-	OTG_FS_IRQn                 = 67,     /*!< USB OTG FS global Interrupt                                       */
+	USB_IRQn                    = 67,     /*!< USB OTG FS global Interrupt                                       */
 	DMA2_Stream5_IRQn           = 68,     /*!< DMA2 Stream 5 global interrupt                                    */
 	DMA2_Stream6_IRQn           = 69,     /*!< DMA2 Stream 6 global interrupt                                    */
 	DMA2_Stream7_IRQn           = 70,     /*!< DMA2 Stream 7 global interrupt                                    */
@@ -110,6 +110,24 @@ typedef enum {
 void NVIC_enable_IRQ(IRQn_t irqn);
 void NVIC_disable_IRQ(IRQn_t irqn);
 void NVIC_set_IRQ_priority(IRQn_t irqn, uint8_t priority);
+
+static inline uint32_t NVIC_get_priority_grouping(void) {
+	return ((uint32_t)((SCB->AIRCR & (7UL << 8U)) >> 8U));
+}
+
+static inline uint32_t NVIC_encode_priority (uint32_t PriorityGroup, uint32_t PreemptPriority, uint32_t SubPriority) {
+  uint32_t PriorityGroupTmp = (PriorityGroup & (uint32_t)0x07UL);   /* only values 0..7 are used          */
+  uint32_t PreemptPriorityBits;
+  uint32_t SubPriorityBits;
+
+  PreemptPriorityBits = ((7UL - PriorityGroupTmp) > (uint32_t)(4U)) ? (uint32_t)(4U) : (uint32_t)(7UL - PriorityGroupTmp);
+  SubPriorityBits     = ((PriorityGroupTmp + (uint32_t)(4U)) < (uint32_t)7UL) ? (uint32_t)0UL : (uint32_t)((PriorityGroupTmp - 7UL) + (uint32_t)(4U));
+
+  return (
+           ((PreemptPriority & (uint32_t)((1UL << (PreemptPriorityBits)) - 1UL)) << SubPriorityBits) |
+           ((SubPriority     & (uint32_t)((1UL << (SubPriorityBits    )) - 1UL)))
+         );
+}
 
 
 #endif //STM32F412_NVIC_H

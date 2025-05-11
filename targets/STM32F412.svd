@@ -42102,10 +42102,10 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>FS_DIEPTXF1</name>
-          <displayName>FS_DIEPTXF1</displayName>
+          <name>FS_TXF1</name>
+          <displayName>FS_TXF1</displayName>
           <description>OTG_FS device IN endpoint transmit FIFO size
-          register (OTG_FS_DIEPTXF2)</description>
+          register (OTG_FS_TXF2)</description>
           <addressOffset>0x104</addressOffset>
           <size>0x20</size>
           <access>read-write</access>
@@ -42127,10 +42127,10 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>FS_DIEPTXF2</name>
-          <displayName>FS_DIEPTXF2</displayName>
+          <name>FS_TXF2</name>
+          <displayName>FS_TXF2</displayName>
           <description>OTG_FS device IN endpoint transmit FIFO size
-          register (OTG_FS_DIEPTXF3)</description>
+          register (OTG_FS_TXF3)</description>
           <addressOffset>0x108</addressOffset>
           <size>0x20</size>
           <access>read-write</access>
@@ -42152,10 +42152,10 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>FS_DIEPTXF3</name>
-          <displayName>FS_DIEPTXF3</displayName>
+          <name>FS_TXF3</name>
+          <displayName>FS_TXF3</displayName>
           <description>OTG_FS device IN endpoint transmit FIFO size
-          register (OTG_FS_DIEPTXF4)</description>
+          register (OTG_FS_TXF4)</description>
           <addressOffset>0x10C</addressOffset>
           <size>0x20</size>
           <access>read-write</access>
@@ -44574,10 +44574,10 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>FS_DIEPMSK</name>
-          <displayName>FS_DIEPMSK</displayName>
+          <name>FS_MSK</name>
+          <displayName>FS_MSK</displayName>
           <description>OTG_FS device IN endpoint common interrupt
-          mask register (OTG_FS_DIEPMSK)</description>
+          mask register (OTG_FS_MSK)</description>
           <addressOffset>0x10</addressOffset>
           <size>0x20</size>
           <access>read-write</access>
@@ -44628,10 +44628,10 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>FS_DOEPMSK</name>
-          <displayName>FS_DOEPMSK</displayName>
+          <name>FS_MSK</name>
+          <displayName>FS_MSK</displayName>
           <description>OTG_FS device OUT endpoint common interrupt
-          mask register (OTG_FS_DOEPMSK)</description>
+          mask register (OTG_FS_MSK)</description>
           <addressOffset>0x14</addressOffset>
           <size>0x20</size>
           <access>read-write</access>
@@ -44753,8 +44753,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DIEPEMPMSK</name>
-          <displayName>DIEPEMPMSK</displayName>
+          <name>EMPMSK</name>
+          <displayName>EMPMSK</displayName>
           <description>OTG_FS device IN endpoint FIFO empty
           interrupt mask register</description>
           <addressOffset>0x34</addressOffset>
@@ -44772,10 +44772,10 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>FS_DIEPCTL0</name>
-          <displayName>FS_DIEPCTL0</displayName>
+          <name>FS_CTL0</name>
+          <displayName>FS_CTL0</displayName>
           <description>OTG_FS device control IN endpoint 0 control
-          register (OTG_FS_DIEPCTL0)</description>
+          register (OTG_FS_CTL0)</description>
           <addressOffset>0x100</addressOffset>
           <size>0x20</size>
           <resetValue>0x00000000</resetValue>
@@ -44853,8 +44853,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DIEPCTL1</name>
-          <displayName>DIEPCTL1</displayName>
+          <name>CTL1</name>
+          <displayName>CTL1</displayName>
           <description>OTG device endpoint-1 control
           register</description>
           <addressOffset>0x120</addressOffset>
@@ -44955,8 +44955,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DIEPCTL2</name>
-          <displayName>DIEPCTL2</displayName>
+          <name>CTL2</name>
+          <displayName>CTL2</displayName>
           <description>OTG device endpoint-2 control
           register</description>
           <addressOffset>0x140</addressOffset>
@@ -45057,8 +45057,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DIEPCTL3</name>
-          <displayName>DIEPCTL3</displayName>
+          <name>CTL3</name>
+          <displayName>CTL3</displayName>
           <description>OTG device endpoint-3 control
           register</description>
           <addressOffset>0x160</addressOffset>
@@ -45159,8 +45159,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DOEPCTL0</name>
-          <displayName>DOEPCTL0</displayName>
+          <name>CTL0</name>
+          <displayName>CTL0</displayName>
           <description>device endpoint-0 control
           register</description>
           <addressOffset>0x300</addressOffset>
@@ -45240,8 +45240,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DOEPCTL1</name>
-          <displayName>DOEPCTL1</displayName>
+          <name>CTL1</name>
+          <displayName>CTL1</displayName>
           <description>device endpoint-1 control
           register</description>
           <addressOffset>0x320</addressOffset>
@@ -45342,8 +45342,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DOEPCTL2</name>
-          <displayName>DOEPCTL2</displayName>
+          <name>CTL2</name>
+          <displayName>CTL2</displayName>
           <description>device endpoint-2 control
           register</description>
           <addressOffset>0x340</addressOffset>
@@ -45444,8 +45444,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DOEPCTL3</name>
-          <displayName>DOEPCTL3</displayName>
+          <name>CTL3</name>
+          <displayName>CTL3</displayName>
           <description>device endpoint-3 control
           register</description>
           <addressOffset>0x360</addressOffset>
@@ -45546,8 +45546,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DIEPINT0</name>
-          <displayName>DIEPINT0</displayName>
+          <name>INT0</name>
+          <displayName>INT0</displayName>
           <description>device endpoint-x interrupt
           register</description>
           <addressOffset>0x108</addressOffset>
@@ -45599,8 +45599,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DIEPINT1</name>
-          <displayName>DIEPINT1</displayName>
+          <name>INT1</name>
+          <displayName>INT1</displayName>
           <description>device endpoint-1 interrupt
           register</description>
           <addressOffset>0x128</addressOffset>
@@ -45652,8 +45652,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DIEPINT2</name>
-          <displayName>DIEPINT2</displayName>
+          <name>INT2</name>
+          <displayName>INT2</displayName>
           <description>device endpoint-2 interrupt
           register</description>
           <addressOffset>0x148</addressOffset>
@@ -45705,8 +45705,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DIEPINT3</name>
-          <displayName>DIEPINT3</displayName>
+          <name>INT3</name>
+          <displayName>INT3</displayName>
           <description>device endpoint-3 interrupt
           register</description>
           <addressOffset>0x168</addressOffset>
@@ -45758,8 +45758,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DOEPINT0</name>
-          <displayName>DOEPINT0</displayName>
+          <name>INT0</name>
+          <displayName>INT0</displayName>
           <description>device endpoint-0 interrupt
           register</description>
           <addressOffset>0x308</addressOffset>
@@ -45800,8 +45800,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DOEPINT1</name>
-          <displayName>DOEPINT1</displayName>
+          <name>INT1</name>
+          <displayName>INT1</displayName>
           <description>device endpoint-1 interrupt
           register</description>
           <addressOffset>0x328</addressOffset>
@@ -45842,8 +45842,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DOEPINT2</name>
-          <displayName>DOEPINT2</displayName>
+          <name>INT2</name>
+          <displayName>INT2</displayName>
           <description>device endpoint-2 interrupt
           register</description>
           <addressOffset>0x348</addressOffset>
@@ -45884,8 +45884,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DOEPINT3</name>
-          <displayName>DOEPINT3</displayName>
+          <name>INT3</name>
+          <displayName>INT3</displayName>
           <description>device endpoint-3 interrupt
           register</description>
           <addressOffset>0x368</addressOffset>
@@ -45926,8 +45926,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DIEPTSIZ0</name>
-          <displayName>DIEPTSIZ0</displayName>
+          <name>TSIZ0</name>
+          <displayName>TSIZ0</displayName>
           <description>device endpoint-0 transfer size
           register</description>
           <addressOffset>0x110</addressOffset>
@@ -45950,8 +45950,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DOEPTSIZ0</name>
-          <displayName>DOEPTSIZ0</displayName>
+          <name>TSIZ0</name>
+          <displayName>TSIZ0</displayName>
           <description>device OUT endpoint-0 transfer size
           register</description>
           <addressOffset>0x310</addressOffset>
@@ -45980,8 +45980,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DIEPTSIZ1</name>
-          <displayName>DIEPTSIZ1</displayName>
+          <name>TSIZ1</name>
+          <displayName>TSIZ1</displayName>
           <description>device endpoint-1 transfer size
           register</description>
           <addressOffset>0x130</addressOffset>
@@ -46010,8 +46010,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DIEPTSIZ2</name>
-          <displayName>DIEPTSIZ2</displayName>
+          <name>TSIZ2</name>
+          <displayName>TSIZ2</displayName>
           <description>device endpoint-2 transfer size
           register</description>
           <addressOffset>0x150</addressOffset>
@@ -46040,8 +46040,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DIEPTSIZ3</name>
-          <displayName>DIEPTSIZ3</displayName>
+          <name>TSIZ3</name>
+          <displayName>TSIZ3</displayName>
           <description>device endpoint-3 transfer size
           register</description>
           <addressOffset>0x170</addressOffset>
@@ -46146,8 +46146,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DOEPTSIZ1</name>
-          <displayName>DOEPTSIZ1</displayName>
+          <name>TSIZ1</name>
+          <displayName>TSIZ1</displayName>
           <description>device OUT endpoint-1 transfer size
           register</description>
           <addressOffset>0x330</addressOffset>
@@ -46177,8 +46177,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DOEPTSIZ2</name>
-          <displayName>DOEPTSIZ2</displayName>
+          <name>TSIZ2</name>
+          <displayName>TSIZ2</displayName>
           <description>device OUT endpoint-2 transfer size
           register</description>
           <addressOffset>0x350</addressOffset>
@@ -46208,8 +46208,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DOEPTSIZ3</name>
-          <displayName>DOEPTSIZ3</displayName>
+          <name>TSIZ3</name>
+          <displayName>TSIZ3</displayName>
           <description>device OUT endpoint-3 transfer size
           register</description>
           <addressOffset>0x370</addressOffset>
